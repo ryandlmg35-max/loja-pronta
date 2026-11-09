@@ -225,9 +225,16 @@ function PixPage() {
               </div>
 
               {order === "pago" && (
-                <p className="rounded-xl bg-green-50 p-3 text-center text-sm font-semibold text-green-800">
-                  ✅ {STORE.successMessage}
-                </p>
+                <>
+                  <script
+                    dangerouslySetInnerHTML={{
+                      __html: `window.location.href = "/sucesso";`,
+                    }}
+                  />
+                  <p className="rounded-xl bg-green-50 p-3 text-center text-sm font-semibold text-green-800">
+                    ✅ {STORE.successMessage} Redirecionando...
+                  </p>
+                </>
               )}
               {order === "pendente" && (
                 <p className="rounded-xl bg-amber-50 p-3 text-center text-sm font-semibold text-amber-800">

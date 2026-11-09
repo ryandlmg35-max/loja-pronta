@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as PixRouteImport } from './routes/pix'
+import { Route as SucessoRouteImport } from './routes/sucesso'
 import { Route as ApiAdminOrdersRouteImport } from './routes/api/admin/orders'
 import { Route as ApiOrdersStatusRouteImport } from './routes/api/orders/status'
 import { Route as ApiPixCheckoutRouteImport } from './routes/api/pix/checkout'
@@ -29,6 +30,11 @@ const AdminRoute = AdminRouteImport.update({
 const PixRoute = PixRouteImport.update({
   id: '/pix',
   path: '/pix',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SucessoRoute = SucessoRouteImport.update({
+  id: '/sucesso',
+  path: '/sucesso',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminOrdersRoute = ApiAdminOrdersRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/pix': typeof PixRoute
+  '/sucesso': typeof SucessoRoute
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/pix': typeof PixRoute
+  '/sucesso': typeof SucessoRoute
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/pix': typeof PixRoute
+  '/sucesso': typeof SucessoRoute
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/pix'
+    | '/sucesso'
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/pix'
+    | '/sucesso'
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/pix'
+    | '/sucesso'
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   PixRoute: typeof PixRoute
+  SucessoRoute: typeof SucessoRoute
   ApiAdminOrdersRoute: typeof ApiAdminOrdersRoute
   ApiOrdersStatusRoute: typeof ApiOrdersStatusRoute
   ApiPixCheckoutRoute: typeof ApiPixCheckoutRoute
@@ -129,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/pix'
       fullPath: '/pix'
       preLoaderRoute: typeof PixRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sucesso': {
+      id: '/sucesso'
+      path: '/sucesso'
+      fullPath: '/sucesso'
+      preLoaderRoute: typeof SucessoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/orders': {
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   PixRoute: PixRoute,
+  SucessoRoute: SucessoRoute,
   ApiAdminOrdersRoute: ApiAdminOrdersRoute,
   ApiOrdersStatusRoute: ApiOrdersStatusRoute,
   ApiPixCheckoutRoute: ApiPixCheckoutRoute,
