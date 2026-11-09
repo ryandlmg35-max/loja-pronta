@@ -14,7 +14,7 @@ export const STORE = {
   merchantCity: "BRASILIA",
   warningTitle: "⚠️ Não abra este link dentro do TikTok ou Instagram",
   warningText:
-    "Os navegadores internos bloqueiam o PIX. Toque nos 3 pontinhos no canto superior direito e escolha \"Abrir no navegador\".",
+    "Os aplicativos abrem os links num navegador interno que <strong>bloqueia o PIX</strong>. Você precisa abrir no navegador de verdade (Chrome, Safari, Edge).",
   steps: [
     "Toque em \"Gerar PIX\" e faça o pagamento de R$ 19,90 pelo QR Code ou pelo código copia e cola.",
     "Volte para esta página e toque em \"Consultar pagamento\" para liberar o acesso.",

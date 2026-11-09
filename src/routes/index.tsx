@@ -31,12 +31,25 @@ function Landing() {
           <h1 className="text-xl font-extrabold tracking-tight text-[#0f3d5c]">{STORE.handle}</h1>
         </header>
 
-        <section className="relative rounded-xl border border-[#b9dcf2] bg-white p-4 text-[#12405f] shadow-sm">
-          <div className="absolute top-2 right-2 text-[#1e88c7] text-2xl">➤</div>
-          <p className="text-sm font-bold leading-snug">
-            <span aria-hidden>⚠️</span> {STORE.warningTitle}
+        <section className="relative rounded-xl border-2 border-[#e0245e] bg-[#fff5f7] p-5 text-[#12405f] shadow-md">
+          <div className="absolute top-3 right-3 text-[#e0245e] text-3xl font-bold">➤</div>
+          <p className="text-lg font-extrabold leading-snug flex items-center gap-2">
+            <span aria-hidden className="text-2xl">⚠️</span> {STORE.warningTitle}
           </p>
-          <p className="mt-1 text-sm leading-snug">{STORE.warningText}</p>
+          <p className="mt-2 text-base leading-relaxed font-medium text-[#7d1f3a]">
+            {STORE.warningText}
+          </p>
+          <div className="mt-4 p-3 rounded-lg bg-white border border-[#f0b9c8] space-y-2">
+            <p className="text-sm font-semibold text-[#7d1f3a] flex items-center gap-1">
+              <span>1️⃣</span> Toque nos <strong>três pontinhos (⋯)</strong> no canto superior direito da tela
+            </p>
+            <p className="text-sm font-semibold text-[#7d1f3a] flex items-center gap-1">
+              <span>2️⃣</span> No menu que abrir, escolha <strong>"Abrir no navegador"</strong> ou <strong>"Abrir no Chrome"</strong>
+            </p>
+            <p className="text-sm font-semibold text-[#7d1f3a] flex items-center gap-1">
+              <span>3️⃣</span> A página vai carregar normal — aí é só tocar em <strong>"ACESSAR MINHA PÁGINA"</strong>
+            </p>
+          </div>
         </section>
 
         <section className="space-y-3">
