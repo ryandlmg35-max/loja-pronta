@@ -4,9 +4,9 @@
  */
 export const STORE = {
   name: "Meus contendinhos",
-  handle: "@laulusilvaa1201",
+  handle: "carolzinha",
   price: 19.9,
-  telegramUrl: "https://t.me/laulusilvaa1201",
+  telegramUrl: "https://t.me/carolzinha",
   coverImage: "/cover.jpg",
   avatarImage: "/avatar.jpg",
   productName: "Meus contendinhos",
