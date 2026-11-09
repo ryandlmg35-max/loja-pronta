@@ -174,10 +174,12 @@ function PixPage() {
           {stage === "ready" && pix && (
             <div className="mt-3 space-y-3 border-t border-[#e3edf5] pt-3">
               <div className="flex flex-col items-center gap-2">
-                <div
-                  className="rounded-xl border border-[#e3edf5] bg-white p-2"
-                  dangerouslySetInnerHTML={{ __html: pix.qrSvg }}
-                />
+                <div className="w-56 h-56 rounded-xl border border-[#e3edf5] bg-white p-2 flex items-center justify-center">
+                  <div
+                    className="w-full h-full"
+                    dangerouslySetInnerHTML={{ __html: pix.qrSvg }}
+                  />
+                </div>
                 <p className="text-xs text-[#4a7893]">
                   Escaneie com o app do seu banco ou use o código copia e cola
                 </p>
