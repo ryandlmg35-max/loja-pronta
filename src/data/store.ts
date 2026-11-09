@@ -12,9 +12,9 @@ export const STORE = {
   productName: "Meus contendinhos",
   productDescription: "Conteúdo digital exclusivo enviado no Telegram.",
   merchantCity: "BRASILIA",
-  warningTitle: "⚠️ Não abra este link dentro do TikTok ou Instagram",
+  warningTitle: "ℹ️ Abra no navegador para o PIX funcionar",
   warningText:
-    "Os aplicativos abrem os links num navegador interno que <strong>bloqueia o PIX</strong>. Você precisa abrir no navegador de verdade (Chrome, Safari, Edge).",
+    "O TikTok e Instagram abrem os links num navegador interno que não aceita PIX. Abra no Chrome, Safari ou Edge para pagar normal.",
   steps: [
     "Toque em \"Gerar PIX\" e faça o pagamento de R$ 19,90 pelo QR Code ou pelo código copia e cola.",
     "Volte para esta página e toque em \"Consultar pagamento\" para liberar o acesso.",
