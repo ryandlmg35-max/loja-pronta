@@ -10,33 +10,69 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiOrdersConfirmRouteImport } from './routes/api/orders/confirm'
+import { Route as ApiOrdersStatusRouteImport } from './routes/api/orders/status'
+import { Route as ApiPixCheckoutRouteImport } from './routes/api/pix/checkout'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiOrdersConfirmRoute = ApiOrdersConfirmRouteImport.update({
+  id: '/api/orders/confirm',
+  path: '/api/orders/confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOrdersStatusRoute = ApiOrdersStatusRouteImport.update({
+  id: '/api/orders/status',
+  path: '/api/orders/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPixCheckoutRoute = ApiPixCheckoutRouteImport.update({
+  id: '/api/pix/checkout',
+  path: '/api/pix/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/orders/confirm': typeof ApiOrdersConfirmRoute
+  '/api/orders/status': typeof ApiOrdersStatusRoute
+  '/api/pix/checkout': typeof ApiPixCheckoutRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/orders/confirm': typeof ApiOrdersConfirmRoute
+  '/api/orders/status': typeof ApiOrdersStatusRoute
+  '/api/pix/checkout': typeof ApiPixCheckoutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/orders/confirm': typeof ApiOrdersConfirmRoute
+  '/api/orders/status': typeof ApiOrdersStatusRoute
+  '/api/pix/checkout': typeof ApiPixCheckoutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/api/orders/confirm' | '/api/orders/status' | '/api/pix/checkout'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/orders/confirm' | '/api/orders/status' | '/api/pix/checkout'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/orders/confirm'
+    | '/api/orders/status'
+    | '/api/pix/checkout'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiOrdersConfirmRoute: typeof ApiOrdersConfirmRoute
+  ApiOrdersStatusRoute: typeof ApiOrdersStatusRoute
+  ApiPixCheckoutRoute: typeof ApiPixCheckoutRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +84,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/orders/confirm': {
+      id: '/api/orders/confirm'
+      path: '/api/orders/confirm'
+      fullPath: '/api/orders/confirm'
+      preLoaderRoute: typeof ApiOrdersConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/orders/status': {
+      id: '/api/orders/status'
+      path: '/api/orders/status'
+      fullPath: '/api/orders/status'
+      preLoaderRoute: typeof ApiOrdersStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/pix/checkout': {
+      id: '/api/pix/checkout'
+      path: '/api/pix/checkout'
+      fullPath: '/api/pix/checkout'
+      preLoaderRoute: typeof ApiPixCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiOrdersConfirmRoute: ApiOrdersConfirmRoute,
+  ApiOrdersStatusRoute: ApiOrdersStatusRoute,
+  ApiPixCheckoutRoute: ApiPixCheckoutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
