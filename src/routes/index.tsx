@@ -35,7 +35,9 @@ function Landing() {
           <p className="text-sm font-semibold leading-snug flex items-center gap-2 text-[#1e88c7]">
             <span aria-hidden>ℹ️</span> {STORE.warningTitle}
           </p>
-          <p className="mt-1 text-sm leading-relaxed">{STORE.warningText}</p>
+          {STORE.warningText && (
+            <p className="mt-1 text-sm leading-relaxed">{STORE.warningText}</p>
+          )}
         </section>
 
         <section className="space-y-3">
