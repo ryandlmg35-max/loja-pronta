@@ -1,15 +1,18 @@
+/**
+ * Config publica da loja. A chave PIX NAO fica aqui: este arquivo entra no bundle
+ * do browser. A chave vive em src/lib/server/pix-key.server.ts.
+ */
 export const STORE = {
   name: "Meus contendinhos",
-  handle: "@ryansikvaryans",
+  handle: "@laulusilvaa1201",
   price: 19.9,
-  pixKey: "ryansikvaryans@gmail.com",
-  telegramUrl: "https://t.me/ryansikvaryans",
-  coverImage: "/capa.jpg",
+  telegramUrl: "https://t.me/laulusilvaa1201",
+  coverImage: "/cover.jpg",
   avatarImage: "/avatar.jpg",
   productName: "Meus contendinhos",
   productDescription: "Conteúdo digital exclusivo enviado no Telegram.",
   merchantCity: "BRASILIA",
-  warningTitle: "Não abra este link dentro do TikTok ou Instagram",
+  warningTitle: "⚠️ Não abra este link dentro do TikTok ou Instagram",
   warningText:
     "Os navegadores internos bloqueiam o PIX. Toque nos 3 pontinhos no canto superior direito e escolha \"Abrir no navegador\".",
   steps: [

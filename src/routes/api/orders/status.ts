@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getAdminClient, isSameOrigin, json } from "@/lib/server/admin-client";
+import { orderIdFromTxid } from "@/lib/pix";
 
 type StatusResponse =
   | { ok: true; status: "pendente" | "pago" | "cancelado"; message: string }
@@ -22,12 +23,17 @@ export const Route = createFileRoute("/api/orders/status")({
 
         const url = new URL(request.url);
         const orderId = url.searchParams.get("orderId");
-        if (!orderId) return json({ ok: false, error: "missing_order_id" }, 400);
+        const txid = url.searchParams.get("txid");
+        if (!orderId && !txid) return json({ ok: false, error: "missing_order_id" }, 400);
+
+        // Aceita o id do pedido ou o txid (mesmo codigo que cai no extrato do banco).
+        const resolvedId = orderId ?? orderIdFromTxid(txid ?? "");
+        if (!resolvedId) return json({ ok: false, error: "invalid_txid" }, 400);
 
         const { data: order, error } = await admin
           .from("pedidos")
           .select("id, status, valor_total")
-          .eq("id", orderId)
+          .eq("id", resolvedId)
           .maybeSingle();
 
         if (error) return json({ ok: false, error: error.message }, 500);

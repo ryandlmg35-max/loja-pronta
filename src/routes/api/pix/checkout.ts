@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { generatePixPayload, generateQrSvg, txidFromOrderId } from "@/lib/pix";
 import { STORE } from "@/data/store";
+import { PIX_KEY } from "@/lib/server/pix-key.server";
 import { getAdminClient, isSameOrigin, json } from "@/lib/server/admin-client";
 
 type CheckoutResponse =
@@ -90,7 +91,7 @@ export const Route = createFileRoute("/api/pix/checkout")({
           : `OD${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}`.slice(0, 25);
 
         const { payload, valor, expiraEm } = generatePixPayload(
-          STORE.pixKey,
+          PIX_KEY,
           STORE.name,
           STORE.merchantCity,
           amount,
