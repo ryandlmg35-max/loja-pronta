@@ -14,16 +14,154 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      pedido_itens: {
+        Row: {
+          id: string
+          pedido_id: string
+          preco_unitario: number
+          produto_id: string
+          quantidade: number
+        }
+        Insert: {
+          id?: string
+          pedido_id: string
+          preco_unitario: number
+          produto_id: string
+          quantidade: number
+        }
+        Update: {
+          id?: string
+          pedido_id?: string
+          preco_unitario?: number
+          produto_id?: string
+          quantidade?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pedido_itens_pedido_id_fkey"
+            columns: ["pedido_id"]
+            isOneToOne: false
+            referencedRelation: "pedidos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedido_itens_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pedidos: {
+        Row: {
+          criado_em: string
+          id: string
+          status: Database["public"]["Enums"]["pedido_status"]
+          usuario_id: string
+          valor_total: number
+        }
+        Insert: {
+          criado_em?: string
+          id?: string
+          status?: Database["public"]["Enums"]["pedido_status"]
+          usuario_id?: string
+          valor_total?: number
+        }
+        Update: {
+          criado_em?: string
+          id?: string
+          status?: Database["public"]["Enums"]["pedido_status"]
+          usuario_id?: string
+          valor_total?: number
+        }
+        Relationships: []
+      }
+      produtos: {
+        Row: {
+          criado_em: string
+          descricao: string | null
+          estoque: number
+          id: string
+          imagem_url: string | null
+          nome: string
+          preco: number
+        }
+        Insert: {
+          criado_em?: string
+          descricao?: string | null
+          estoque?: number
+          id?: string
+          imagem_url?: string | null
+          nome: string
+          preco?: number
+        }
+        Update: {
+          criado_em?: string
+          descricao?: string | null
+          estoque?: number
+          id?: string
+          imagem_url?: string | null
+          nome?: string
+          preco?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          criado_em: string
+          email: string | null
+          id: string
+          nome: string | null
+        }
+        Insert: {
+          criado_em?: string
+          email?: string | null
+          id: string
+          nome?: string | null
+        }
+        Update: {
+          criado_em?: string
+          email?: string | null
+          id?: string
+          nome?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      pedido_status: "pendente" | "pago" | "cancelado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +288,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      pedido_status: ["pendente", "pago", "cancelado"],
+    },
   },
 } as const
