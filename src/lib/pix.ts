@@ -51,52 +51,36 @@ function buildPixPayload(
   return `${withoutCrc}${crc}`;
 }
 
+/** Mesmo txid que aparece no extrato do banco: OD + 23 chars do id sem hifen. */
+export function txidFromOrderId(id: string): string {
+  return `OD${id.replace(/-/g, "").slice(0, 23)}`;
+}
+
 export function generatePixPayload(
   key: string,
   merchantName: string,
   merchantCity: string,
-  amount: number
+  amount: number,
+  txid?: string
 ): PixPayload {
-  const txid = `txid_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-  const payload = buildPixPayload(key, merchantName, merchantCity, amount, txid);
+  const resolvedTxid = txid ?? `OD${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+  const payload = buildPixPayload(key, merchantName, merchantCity, amount, resolvedTxid);
   return {
     payload,
-    txid,
+    txid: resolvedTxid,
     qrSvg: '',
     valor: amount,
     expiraEm: 3600,
   };
 }
 
-function encodeUtf8(str: string): Uint8Array {
-  return new TextEncoder().encode(str);
-}
-
-function base64Encode(bytes: Uint8Array): string {
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-}
-
 export async function generateQrSvg(payload: string): Promise<string> {
-  const uqr = await import('uqr');
-  const qr = uqr.encode(encodeUtf8(payload), { ecc: 'M' });
-  const size = qr.size;
-  const moduleSize = 4;
-  const margin = 4;
-  const imgSize = size * moduleSize + margin * 2;
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${imgSize}" height="${imgSize}" viewBox="0 0 ${imgSize} ${imgSize}"><rect width="${imgSize}" height="${imgSize}" fill="white"/>`;
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
-      if (qr.data[y * size + x]) {
-        const px = margin + x * moduleSize;
-        const py = margin + y * moduleSize;
-        svg += `<rect x="${px}" y="${py}" width="${moduleSize}" height="${moduleSize}" fill="black"/>`;
-      }
-    }
-  }
-  svg += '</svg>';
-  return svg;
+  const { renderSVG } = await import('uqr');
+  return renderSVG(payload, {
+    ecc: 'M',
+    border: 2,
+    pixelSize: 4,
+    blackColor: '#000000',
+    whiteColor: '#ffffff',
+  });
 }

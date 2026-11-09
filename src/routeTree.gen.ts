@@ -10,7 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiOrdersConfirmRouteImport } from './routes/api/orders/confirm'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ApiAdminOrdersRouteImport } from './routes/api/admin/orders'
 import { Route as ApiOrdersStatusRouteImport } from './routes/api/orders/status'
 import { Route as ApiPixCheckoutRouteImport } from './routes/api/pix/checkout'
 
@@ -19,9 +20,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiOrdersConfirmRoute = ApiOrdersConfirmRouteImport.update({
-  id: '/api/orders/confirm',
-  path: '/api/orders/confirm',
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminOrdersRoute = ApiAdminOrdersRouteImport.update({
+  id: '/api/admin/orders',
+  path: '/api/admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiOrdersStatusRoute = ApiOrdersStatusRouteImport.update({
@@ -37,40 +43,54 @@ const ApiPixCheckoutRoute = ApiPixCheckoutRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/api/orders/confirm': typeof ApiOrdersConfirmRoute
+  '/admin': typeof AdminRoute
+  '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/orders/confirm': typeof ApiOrdersConfirmRoute
+  '/admin': typeof AdminRoute
+  '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/api/orders/confirm': typeof ApiOrdersConfirmRoute
+  '/admin': typeof AdminRoute
+  '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/api/orders/confirm' | '/api/orders/status' | '/api/pix/checkout'
+    | '/'
+    | '/admin'
+    | '/api/admin/orders'
+    | '/api/orders/status'
+    | '/api/pix/checkout'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/orders/confirm' | '/api/orders/status' | '/api/pix/checkout'
+  to:
+    | '/'
+    | '/admin'
+    | '/api/admin/orders'
+    | '/api/orders/status'
+    | '/api/pix/checkout'
   id:
     | '__root__'
     | '/'
-    | '/api/orders/confirm'
+    | '/admin'
+    | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApiOrdersConfirmRoute: typeof ApiOrdersConfirmRoute
+  AdminRoute: typeof AdminRoute
+  ApiAdminOrdersRoute: typeof ApiAdminOrdersRoute
   ApiOrdersStatusRoute: typeof ApiOrdersStatusRoute
   ApiPixCheckoutRoute: typeof ApiPixCheckoutRoute
 }
@@ -84,11 +104,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/orders/confirm': {
-      id: '/api/orders/confirm'
-      path: '/api/orders/confirm'
-      fullPath: '/api/orders/confirm'
-      preLoaderRoute: typeof ApiOrdersConfirmRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/orders': {
+      id: '/api/admin/orders'
+      path: '/api/admin/orders'
+      fullPath: '/api/admin/orders'
+      preLoaderRoute: typeof ApiAdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/orders/status': {
@@ -110,7 +137,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApiOrdersConfirmRoute: ApiOrdersConfirmRoute,
+  AdminRoute: AdminRoute,
+  ApiAdminOrdersRoute: ApiAdminOrdersRoute,
   ApiOrdersStatusRoute: ApiOrdersStatusRoute,
   ApiPixCheckoutRoute: ApiPixCheckoutRoute,
 }
