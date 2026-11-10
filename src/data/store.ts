@@ -1,6 +1,6 @@
 /**
  * Config publica da loja. A chave PIX NAO fica aqui: este arquivo entra no bundle
- * do browser. A chave vive em src/lib/server/pix-key.server.ts.
+ * do browser. Pagamentos via BunnyPay (servidor).
  */
 export const STORE = {
   name: "Meus contendinhos",
@@ -16,12 +16,12 @@ export const STORE = {
   warningTitle: "Se não abrir, toque nos 3 pontinhos (⋯) e escolha \"Abrir no navegador\"",
   warningText: "",
   steps: [
-    "Toque em \"Gerar PIX\" e faça o pagamento de R$ 19,90 pelo QR Code ou pelo código copia e cola.",
-    "Toque em \"Enviar comprovante\" e mande o print do pagamento no WhatsApp.",
-    "O acesso é liberado assim que o pagamento for confirmado.",
+    "Informe seu nome completo e CPF e toque em \"Gerar PIX\".",
+    "Pague R$ 19,90 pelo QR Code ou pelo código copia e cola.",
+    "Assim que o pagamento for confirmado, seu link de acesso aparece aqui.",
   ],
   paymentInstruction:
-    "Após realizar o pagamento, toque em \"Enviar comprovante\" e mande o print no WhatsApp.",
+    "A confirmação é automática: depois de pagar, toque em \"Consultar pagamento\".",
   successMessage: "Pagamento confirmado. O acesso será enviado no seu Telegram.",
   pendingMessage:
     "Pagamento pendente. Se já pagou, toque em \"Enviar comprovante\" e mande o print.",
