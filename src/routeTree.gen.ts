@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as MercadoPagoTesteRouteImport } from './routes/mercado-pago-teste'
 import { Route as PixRouteImport } from './routes/pix'
 import { Route as SucessoRouteImport } from './routes/sucesso'
+import { Route as ApiMercadoPagoTesteRouteImport } from './routes/api/mercado-pago-teste'
 import { Route as ApiAdminOrdersRouteImport } from './routes/api/admin/orders'
 import { Route as ApiOrdersStatusRouteImport } from './routes/api/orders/status'
 import { Route as ApiPixCheckoutRouteImport } from './routes/api/pix/checkout'
@@ -28,6 +30,11 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MercadoPagoTesteRoute = MercadoPagoTesteRouteImport.update({
+  id: '/mercado-pago-teste',
+  path: '/mercado-pago-teste',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PixRoute = PixRouteImport.update({
   id: '/pix',
   path: '/pix',
@@ -36,6 +43,11 @@ const PixRoute = PixRouteImport.update({
 const SucessoRoute = SucessoRouteImport.update({
   id: '/sucesso',
   path: '/sucesso',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMercadoPagoTesteRoute = ApiMercadoPagoTesteRouteImport.update({
+  id: '/api/mercado-pago-teste',
+  path: '/api/mercado-pago-teste',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdminOrdersRoute = ApiAdminOrdersRouteImport.update({
@@ -63,8 +75,10 @@ const ApiPublicBunnypayPostbackRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/mercado-pago-teste': typeof MercadoPagoTesteRoute
   '/pix': typeof PixRoute
   '/sucesso': typeof SucessoRoute
+  '/api/mercado-pago-teste': typeof ApiMercadoPagoTesteRoute
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
@@ -73,8 +87,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/mercado-pago-teste': typeof MercadoPagoTesteRoute
   '/pix': typeof PixRoute
   '/sucesso': typeof SucessoRoute
+  '/api/mercado-pago-teste': typeof ApiMercadoPagoTesteRoute
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
@@ -84,8 +100,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/mercado-pago-teste': typeof MercadoPagoTesteRoute
   '/pix': typeof PixRoute
   '/sucesso': typeof SucessoRoute
+  '/api/mercado-pago-teste': typeof ApiMercadoPagoTesteRoute
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
@@ -96,8 +114,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/mercado-pago-teste'
     | '/pix'
     | '/sucesso'
+    | '/api/mercado-pago-teste'
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
@@ -106,8 +126,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/mercado-pago-teste'
     | '/pix'
     | '/sucesso'
+    | '/api/mercado-pago-teste'
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
@@ -116,8 +138,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/mercado-pago-teste'
     | '/pix'
     | '/sucesso'
+    | '/api/mercado-pago-teste'
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
@@ -127,8 +151,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  MercadoPagoTesteRoute: typeof MercadoPagoTesteRoute
   PixRoute: typeof PixRoute
   SucessoRoute: typeof SucessoRoute
+  ApiMercadoPagoTesteRoute: typeof ApiMercadoPagoTesteRoute
   ApiAdminOrdersRoute: typeof ApiAdminOrdersRoute
   ApiOrdersStatusRoute: typeof ApiOrdersStatusRoute
   ApiPixCheckoutRoute: typeof ApiPixCheckoutRoute
@@ -151,6 +177,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mercado-pago-teste': {
+      id: '/mercado-pago-teste'
+      path: '/mercado-pago-teste'
+      fullPath: '/mercado-pago-teste'
+      preLoaderRoute: typeof MercadoPagoTesteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pix': {
       id: '/pix'
       path: '/pix'
@@ -163,6 +196,13 @@ declare module '@tanstack/react-router' {
       path: '/sucesso'
       fullPath: '/sucesso'
       preLoaderRoute: typeof SucessoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mercado-pago-teste': {
+      id: '/api/mercado-pago-teste'
+      path: '/api/mercado-pago-teste'
+      fullPath: '/api/mercado-pago-teste'
+      preLoaderRoute: typeof ApiMercadoPagoTesteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/admin/orders': {
@@ -199,8 +239,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  MercadoPagoTesteRoute: MercadoPagoTesteRoute,
   PixRoute: PixRoute,
   SucessoRoute: SucessoRoute,
+  ApiMercadoPagoTesteRoute: ApiMercadoPagoTesteRoute,
   ApiAdminOrdersRoute: ApiAdminOrdersRoute,
   ApiOrdersStatusRoute: ApiOrdersStatusRoute,
   ApiPixCheckoutRoute: ApiPixCheckoutRoute,
