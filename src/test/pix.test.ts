@@ -3,12 +3,12 @@ import { generateQrSvg } from "@/lib/pix";
 import { evaluatePostback, isValidCpf, safeEqual } from "@/lib/bunnypay";
 import { STORE } from "@/data/store";
 
-const order = { status: "pendente", valor_total: 24.9 };
+const order = { status: "pendente", valor_total: 19.9 };
 const paid = { event: "transaction.paid", status: "PAID", transaction_id: "tx1", amount: 18.5 };
 
 describe("BunnyPay checkout", () => {
-  it("cobra R$ 24,90 (preço que cobre as taxas)", () => {
-    expect(STORE.price).toBe(24.9);
+  it("cobra R$ 19,90 (preço que cobre as taxas)", () => {
+    expect(STORE.price).toBe(19.9);
   });
 
   it("aceita CPF válido e recusa inválido", () => {
@@ -18,7 +18,7 @@ describe("BunnyPay checkout", () => {
   });
   it("marca pago com valor líquido até o total do pedido", () => {
     expect(evaluatePostback(paid, order)).toEqual({ action: "mark_paid" });
-    expect(evaluatePostback({ ...paid, amount: 24.9 }, order)).toEqual({ action: "mark_paid" });
+    expect(evaluatePostback({ ...paid, amount: 19.9 }, order)).toEqual({ action: "mark_paid" });
   });
   it("recusa valor acima do pedido ou zero", () => {
     expect(evaluatePostback({ ...paid, amount: 50 }, order).action).toBe("ignore");
@@ -30,7 +30,7 @@ describe("BunnyPay checkout", () => {
     expect(evaluatePostback(paid, null).action).toBe("ignore");
   });
   it("postback repetido não reprocessa pedido já pago", () => {
-    expect(evaluatePostback(paid, { status: "pago", valor_total: 24.9 })).toEqual({ action: "ignore", reason: "ja_processado" });
+    expect(evaluatePostback(paid, { status: "pago", valor_total: 19.9 })).toEqual({ action: "ignore", reason: "ja_processado" });
   });
   it("token do postback precisa ser idêntico", () => {
     expect(safeEqual("abc", "abc")).toBe(true);
