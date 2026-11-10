@@ -15,6 +15,13 @@
       "when": 1794281857400,
       "tag": "0001_add_mercadopago_payment_id_to_orders",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794324042434,
+      "tag": "0002_bunnypay_orders",
+      "breakpoints": true
     }
   ]
 }
