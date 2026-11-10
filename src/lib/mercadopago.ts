@@ -6,7 +6,6 @@ export const paymentInput = z.object({ email: z.string().trim().email().max(254)
 export function paymentBody(email: string, orderId: string, notificationUrl?: string) {
   return {
     transaction_amount: STORE.price,
-    currency_id: "BRL",
     payment_method_id: "pix",
     description: STORE.productName,
     payer: { email },
