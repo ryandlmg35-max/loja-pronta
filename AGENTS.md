@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Store provider payment identifiers in a nullable text column on orders and regenerate database types through migrations, so checkout and payment notifications share the same schema.
