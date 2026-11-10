@@ -30,5 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 - Store provider payment identifiers in a nullable text column on orders and regenerate database types through migrations, so checkout and payment notifications share the same schema.
-- Payments use BunnyPay cashin; postbacks are authenticated by a secret token in the postback URL (BunnyPay documents no signature), and the private link is only returned by the status endpoint for paid orders.
-- Keep Mercado Pago generation probes separate and development-only, cancel probe charges immediately, and never create orders or grant access from them; this protects the existing BunnyPay checkout during evaluation.
+- New checkouts use Mercado Pago PIX with payer email; verify payments through the authenticated provider API against stored ID, order reference, BRL currency and exact amount before returning private access. Keep BunnyPay postbacks for existing orders during transition.
+- Keep Mercado Pago generation probes separate and development-only, cancel probe charges immediately, and never create orders or grant access from them; this prevents test charges from granting real access.
+
+- Read payment credentials inside handlers and share Mercado Pago reconciliation between status checks and notifications, because notifications and browser state are not payment proof.
