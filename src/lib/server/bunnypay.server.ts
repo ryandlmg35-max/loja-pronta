@@ -7,7 +7,7 @@ export async function createCashin(input: {
   cpf: string;
   valor: number;
   descricao: string;
-  postback?: string;
+  postback?: string | undefined;
   device: "android" | "ios" | "web";
 }): Promise<CashinResult> {
   const apiKey = process.env["BUNNYPAY_API_KEY"];
