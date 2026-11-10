@@ -79,13 +79,7 @@ function PixPage() {
   }
 
   function getWhatsAppUrl() {
-    const phone = STORE.whatsappNumber;
-    const text = encodeURIComponent(
-      `Olá, acabei de fazer o pagamento de R$ ${STORE.price.toFixed(2).replace(".", ",")} ` +
-      `pelo produto "${STORE.productName}". ` +
-      `Segue o comprovante em anexo. Meu pedido: ${pix?.orderId ?? "não gerado"}`
-    );
-    return `https://wa.me/${phone}?text=${text}`;
+    return "https://wa.me/5562981906908?text=Quero%20enviar%20meu%20comprovante";
   }
 
   async function copyPayload() {
