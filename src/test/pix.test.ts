@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { generateQrSvg } from "@/lib/pix";
 import { evaluatePostback, isValidCpf, safeEqual } from "@/lib/bunnypay";
+import { STORE } from "@/data/store";
 
 const order = { status: "pendente", valor_total: 24.9 };
 const paid = { event: "transaction.paid", status: "PAID", transaction_id: "tx1", amount: 18.5 };
 
 describe("BunnyPay checkout", () => {
+  it("cobra R$ 24,90 (preço que cobre as taxas)", () => {
+    expect(STORE.price).toBe(24.9);
+  });
+
   it("aceita CPF válido e recusa inválido", () => {
     expect(isValidCpf("111.444.777-35")).toBe(true);
     expect(isValidCpf("11144477736")).toBe(false);
