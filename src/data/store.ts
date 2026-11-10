@@ -7,6 +7,7 @@ export const STORE = {
   handle: "sofia",
   price: 19.9,
   telegramUrl: "https://t.me/sofia",
+  telegramGroupUrl: "https://t.me/+s0yagP7CQIg5ZDE5",
   whatsappNumber: "5562981906908",
   coverImage: "/cover.jpg",
   avatarImage: "/avatar.jpg",

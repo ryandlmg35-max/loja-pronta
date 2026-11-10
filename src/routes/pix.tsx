@@ -109,6 +109,19 @@ function PixPage() {
         <section className="rounded-2xl border border-[#b9dcf2] bg-white p-3 shadow-sm">
           <img src={STORE.coverImage} alt={`${STORE.name} — capa`} className="w-full rounded-xl object-cover" />
 
+          <a
+            href={STORE.telegramGroupUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1e88c7] py-3.5 text-base font-bold text-white shadow-sm transition active:scale-[0.98]"
+          >
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <path d="M22 2 11 13" />
+              <path d="M22 2 15 22l-4-9-9-4 20-7z" />
+            </svg>
+            Previas
+          </a>
+
           <ol className="mt-3 space-y-1.5 px-1 text-sm leading-snug text-[#12405f]">
             {STORE.steps.map((step, i) => (
               <li key={step} className="flex gap-2">
