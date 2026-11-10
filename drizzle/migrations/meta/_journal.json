@@ -8,6 +8,13 @@
       "when": 1794195532631,
       "tag": "0000_ecommerce_base",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794281857400,
+      "tag": "0001_add_mercadopago_payment_id_to_orders",
+      "breakpoints": true
     }
   ]
 }

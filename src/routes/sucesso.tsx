@@ -15,7 +15,6 @@ export const Route = createFileRoute("/sucesso")({
       { property: "og:title", content: "Acesso liberado — Meus contendinhos" },
       { property: "og:description", content: "Seu pagamento foi confirmado. Bem-vindo ao grupo VIP!" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: STORE.coverImage },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
     ],

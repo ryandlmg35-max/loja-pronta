@@ -57,6 +57,7 @@ export type Database = {
         Row: {
           criado_em: string
           id: string
+          mp_payment_id: string | null
           status: Database["public"]["Enums"]["pedido_status"]
           usuario_id: string
           valor_total: number
@@ -64,6 +65,7 @@ export type Database = {
         Insert: {
           criado_em?: string
           id?: string
+          mp_payment_id?: string | null
           status?: Database["public"]["Enums"]["pedido_status"]
           usuario_id?: string
           valor_total?: number
@@ -71,6 +73,7 @@ export type Database = {
         Update: {
           criado_em?: string
           id?: string
+          mp_payment_id?: string | null
           status?: Database["public"]["Enums"]["pedido_status"]
           usuario_id?: string
           valor_total?: number

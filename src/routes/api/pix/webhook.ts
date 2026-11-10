@@ -45,7 +45,7 @@ export const Route = createFileRoute("/api/pix/webhook")({
 
         const status = paymentDetail.status; // approved, pending, rejected, cancelled, refunded
         const externalReference = paymentDetail.external_reference;
-        const mpId = paymentDetail.id?.toString();
+        const mpId = paymentDetail.id?.toString() ?? mpPaymentId.toString();
 
         if (!externalReference) {
           console.warn("Webhook MP sem external_reference:", mpId);

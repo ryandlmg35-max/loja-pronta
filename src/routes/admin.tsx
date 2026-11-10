@@ -4,7 +4,14 @@ import { STORE } from "@/data/store";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [{ title: "Pedidos — painel" }],
+    meta: [
+      { title: `${STORE.name} — Painel de pedidos` },
+      { name: "description", content: `Gerenciamento de pedidos de ${STORE.name}.` },
+      { property: "og:title", content: `${STORE.name} — Painel de pedidos` },
+      { property: "og:description", content: `Gerenciamento de pedidos de ${STORE.name}.` },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
   }),
   component: AdminPanel,
 });
