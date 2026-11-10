@@ -1,6 +1,6 @@
 /**
  * Config publica da loja. A chave PIX NAO fica aqui: este arquivo entra no bundle
- * do browser. Pagamentos via BunnyPay (servidor).
+ * do browser. Pagamentos via Mercado Pago (servidor).
  */
 export const STORE = {
   name: "Meus contendinhos",
@@ -17,7 +17,7 @@ export const STORE = {
   warningTitle: "Se não abrir, toque nos 3 pontinhos (⋯) e escolha \"Abrir no navegador\"",
   warningText: "",
   steps: [
-    "Informe seu nome completo e CPF e toque em \"Gerar PIX\".",
+    "Informe seu e-mail e toque em \"Gerar PIX com Mercado Pago\".",
     "Pague R$ 19,90 pelo QR Code ou pelo código copia e cola.",
     "Assim que o pagamento for confirmado, seu link de acesso aparece aqui.",
   ],

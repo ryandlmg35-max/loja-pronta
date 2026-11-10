@@ -19,6 +19,7 @@ export async function synchronizeMpOrder(admin: SupabaseClient<Database>, order:
   if (!status) throw new Error("payment_order_mismatch");
   if (status === "pago" && order.status === "cancelado") return "cancelado";
   if (status !== order.status) {
+    if (order.status !== "pendente" && order.status !== "pago" && order.status !== "cancelado") throw new Error("invalid_order_status");
     const { error } = await admin.from("pedidos").update({
       status,
       ...(status === "pago" ? { pago_em: payment.date_approved ?? new Date().toISOString() } : {}),

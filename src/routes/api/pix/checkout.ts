@@ -49,7 +49,7 @@ export const Route = createFileRoute("/api/pix/checkout")({
           const charge = mpPaymentSchema.safeParse(raw);
           if (!response.ok || !charge.success) {
             await admin.from("pedidos").update({ status: "cancelado" }).eq("id", order.id);
-            console.warn("[MercadoPago] criação recusada", { status: response.status });
+            console.warn("[MercadoPago] criação recusada", { status: response.status, codes: Array.isArray(raw.cause) ? raw.cause.map((cause: { code?: unknown }) => cause.code) : [], validation: charge.success ? [] : charge.error.issues.map(issue => issue.path.join(".")) });
             return json({ ok: false, error: "O Mercado Pago não conseguiu gerar este PIX. Confira o e-mail e tente novamente." }, 502);
           }
           const payment = charge.data;
