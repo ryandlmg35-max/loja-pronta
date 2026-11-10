@@ -1,21 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { txidFromOrderId } from "@/lib/pix";
+import { generatePixPayload, generateQrSvg, txidFromOrderId } from "@/lib/pix";
 import { STORE } from "@/data/store";
+import { PIX_KEY } from "@/lib/server/pix-key.server";
 import { getAdminClient, isSameOrigin, json } from "@/lib/server/admin-client";
-import { mpPayment } from "@/lib/server/mercadopago";
 
 type CheckoutResponse =
   | {
       ok: true;
       orderId: string | null;
-      mpPaymentId: string | null;
-      qrCodeBase64: string;
-      qrCode: string; // copia e cola
+      txid: string;
+      payload: string;
+      qrSvg: string;
       valor: number;
       expiraEm: number;
       tracked: boolean;
     }
-  | { ok: false; error: string; hint?: string };
+  | { ok: false; error: string };
 
 export const Route = createFileRoute("/api/pix/checkout")({
   server: {
@@ -81,74 +81,32 @@ export const Route = createFileRoute("/api/pix/checkout")({
             }
           }
         } else {
-          console.warn("SUPABASE_SERVICE_ROLE_KEY ausente: criando PIX sem rastreamento.");
+          console.warn("SUPABASE_SERVICE_ROLE_KEY ausente: PIX gerado sem rastreamento de pedido.");
         }
 
-        // Se não tem Mercado Pago configurado, fallback pro PIX estático (dev)
-        if (!mpPayment) {
-          console.warn("Mercado Pago não configurado — fallback PIX estático");
-          const { generatePixPayload, generateQrSvg } = await import("@/lib/pix");
-          const { PIX_KEY } = await import("@/lib/server/pix-key.server");
-          const txid = orderId
-            ? txidFromOrderId(orderId)
-            : `OD${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}`.slice(0, 25);
-          const { payload, valor, expiraEm } = generatePixPayload(PIX_KEY, STORE.name, STORE.merchantCity, amount, txid);
-          const qrSvg = await generateQrSvg(payload);
-          return json({
-            ok: true,
-            orderId,
-            mpPaymentId: null,
-            qrCodeBase64: "",
-            qrCode: payload,
-            valor,
-            expiraEm,
-            tracked: orderId !== null,
-          });
-        }
+        const txid = orderId
+          ? txidFromOrderId(orderId)
+          : `OD${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}`.slice(0, 25);
 
-        // Cria cobrança PIX no Mercado Pago
-        const externalReference = orderId ?? `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        const payerEmail = "cliente@exemplo.com"; // MP exige, mas não usamos para nada
+        const { payload, valor, expiraEm } = generatePixPayload(
+          PIX_KEY,
+          STORE.name,
+          STORE.merchantCity,
+          amount,
+          txid,
+        );
+        const qrSvg = await generateQrSvg(payload);
 
-        try {
-          const payment = await mpPayment.create({
-            body: {
-              transaction_amount: amount,
-              description: STORE.productName,
-              payment_method_id: "pix",
-              payer: { email: payerEmail },
-              external_reference: externalReference,
-              notification_url: `${new URL(request.url).origin}/api/pix/webhook`,
-            },
-          });
-
-          const mpPaymentId = payment.id?.toString() ?? null;
-          const qrCodeBase64 = payment.point_of_interaction?.transaction_data?.qr_code_base64 ?? "";
-          const qrCode = payment.point_of_interaction?.transaction_data?.qr_code ?? "";
-          const expiresAt = payment.date_of_expiration ? new Date(payment.date_of_expiration).getTime() : Date.now() + 3600_000;
-
-          // Salva mp_payment_id no pedido se tiver orderId
-          if (orderId && mpPaymentId && admin) {
-            await admin.from("pedidos").update({ mp_payment_id: mpPaymentId }).eq("id", orderId);
-          }
-
-          return json({
-            ok: true,
-            orderId,
-            mpPaymentId,
-            qrCodeBase64,
-            qrCode,
-            valor: amount,
-            expiraEm: Math.ceil((expiresAt - Date.now()) / 1000),
-            tracked: orderId !== null,
-          });
-        } catch (e) {
-          console.error("Erro ao criar PIX no Mercado Pago:", e);
-          return json(
-            { ok: false, error: "mp_create_failed", hint: e instanceof Error ? e.message : "Erro desconhecido" },
-            500,
-          );
-        }
+        return json({
+          ok: true,
+          orderId,
+          txid,
+          payload,
+          qrSvg,
+          valor,
+          expiraEm,
+          tracked: orderId !== null,
+        });
       },
     },
   },
