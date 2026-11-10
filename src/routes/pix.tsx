@@ -10,6 +10,7 @@ export const Route = createFileRoute("/pix")({
       { property: "og:title", content: `${STORE.name} — PIX` },
       { property: "og:description", content: STORE.paymentInstruction },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: STORE.coverImage },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
     ],
@@ -18,7 +19,6 @@ export const Route = createFileRoute("/pix")({
 });
 
 type PixStage = "idle" | "loading" | "ready" | "error";
-type OrderState = "idle" | "checking" | "pendente" | "pago" | "cancelado";
 
 type PixData = {
   orderId: string | null;
@@ -35,7 +35,6 @@ function PixPage() {
   const [stage, setStage] = useState<PixStage>("idle");
   const [pix, setPix] = useState<PixData | null>(null);
   const [error, setError] = useState("");
-  const [order, setOrder] = useState<OrderState>("idle");
   const [showPayload, setShowPayload] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -46,7 +45,6 @@ function PixPage() {
       const parsed = JSON.parse(saved) as PixData;
       setPix(parsed);
       setStage("ready");
-      void checkStatus(parsed.orderId);
     } catch {
       localStorage.removeItem(STORAGE_KEY);
     }
@@ -74,27 +72,20 @@ function PixPage() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setPix(next);
       setStage("ready");
-      setOrder("pendente");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro de rede ao gerar o PIX");
       setStage("error");
     }
   }
 
-  async function checkStatus(orderId: string | null) {
-    if (!orderId) {
-      setOrder("pendente");
-      return;
-    }
-    setOrder("checking");
-    try {
-      const res = await fetch(`/api/orders/status?orderId=${encodeURIComponent(orderId)}`);
-      const data = await res.json();
-      if (!data.ok) throw new Error(data.error ?? "erro");
-      setOrder(data.status);
-    } catch {
-      setOrder("idle");
-    }
+  function openWhatsApp() {
+    const phone = STORE.whatsappNumber;
+    const text = encodeURIComponent(
+      `Olá, acabei de fazer o pagamento de R$ ${STORE.price.toFixed(2).replace(".", ",")} ` +
+      `pelo produto "${STORE.productName}". ` +
+      `Segue o comprovante em anexo. Meu pedido: ${pix?.orderId ?? "não gerado"}`
+    );
+    window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
   }
 
   async function copyPayload() {
@@ -223,36 +214,12 @@ function PixPage() {
                 )}
               </div>
 
-              {order === "pago" && (
-                <>
-                  <script
-                    dangerouslySetInnerHTML={{
-                      __html: `window.location.href = "/sucesso";`,
-                    }}
-                  />
-                  <p className="rounded-xl bg-green-50 p-3 text-center text-sm font-semibold text-green-800">
-                    ✅ {STORE.successMessage} Redirecionando...
-                  </p>
-                </>
-              )}
-              {order === "pendente" && (
-                <p className="rounded-xl bg-amber-50 p-3 text-center text-sm font-semibold text-amber-800">
-                  ⏳ {pix.tracked ? STORE.pendingMessage : STORE.pendingMessageNoTracking}
-                </p>
-              )}
-              {order === "cancelado" && (
-                <p className="rounded-xl bg-red-50 p-3 text-center text-sm font-semibold text-red-700">
-                  ❌ Pedido cancelado.
-                </p>
-              )}
-
               <button
                 type="button"
-                onClick={() => void checkStatus(pix.orderId)}
-                disabled={order === "checking" || order === "pago" || !pix.tracked}
-                className="w-full rounded-xl border border-[#1e88c7] py-2.5 text-sm font-bold text-[#1e88c7] transition disabled:opacity-50"
+                onClick={openWhatsApp}
+                className="w-full rounded-xl bg-[#25D366] py-2.5 text-sm font-bold text-white shadow-sm transition active:scale-[0.98]"
               >
-                {order === "checking" ? "Consultando…" : "Consultar pagamento"}
+                Enviar comprovante
               </button>
 
               <p className="text-center text-xs text-[#4a7893]">

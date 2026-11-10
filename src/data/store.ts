@@ -7,6 +7,7 @@ export const STORE = {
   handle: "sofia",
   price: 19.9,
   telegramUrl: "https://t.me/sofia",
+  whatsappNumber: "5562981906908",
   coverImage: "/cover.jpg",
   avatarImage: "/avatar.jpg",
   productName: "Meus contendinhos",
@@ -16,14 +17,14 @@ export const STORE = {
   warningText: "",
   steps: [
     "Toque em \"Gerar PIX\" e faça o pagamento de R$ 19,90 pelo QR Code ou pelo código copia e cola.",
-    "Volte para esta página e toque em \"Consultar pagamento\" para liberar o acesso.",
-    "O conteúdo é enviado no Telegram em poucos minutos.",
+    "Toque em \"Enviar comprovante\" e mande o print do pagamento no WhatsApp.",
+    "O acesso é liberado assim que o pagamento for confirmado.",
   ],
   paymentInstruction:
-    "Após realizar o pagamento, volte para esta página e clique em \"Consultar pagamento\".",
+    "Após realizar o pagamento, toque em \"Enviar comprovante\" e mande o print no WhatsApp.",
   successMessage: "Pagamento confirmado. O acesso será enviado no seu Telegram.",
   pendingMessage:
-    "Pagamento pendente. Se já pagou, aguarde alguns instantes e clique novamente em \"Consultar pagamento\".",
+    "Pagamento pendente. Se já pagou, toque em \"Enviar comprovante\" e mande o print.",
   pendingMessageNoTracking:
-    "PIX gerado. Faça o pagamento e envie o comprovante no Telegram para liberar o acesso.",
+    "PIX gerado. Faça o pagamento e toque em \"Enviar comprovante\" pra mandar o print.",
 };
