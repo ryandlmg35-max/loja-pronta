@@ -1,21 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { generatePixPayload, generateQrSvg, txidFromOrderId } from "@/lib/pix";
 import { STORE } from "@/data/store";
-import { PIX_KEY } from "@/lib/server/pix-key.server";
 import { getAdminClient, isSameOrigin, json } from "@/lib/server/admin-client";
+import { createPixCharge } from "@/lib/server/bunnypay";
 
 type CheckoutResponse =
   | {
       ok: true;
       orderId: string | null;
-      txid: string;
-      payload: string;
-      qrSvg: string;
+      bunnyPayId: string | null;
+      qrCodeBase64: string;
+      qrCode: string; // copia e cola
       valor: number;
       expiraEm: number;
       tracked: boolean;
     }
-  | { ok: false; error: string };
+  | { ok: false; error: string; hint?: string };
 
 export const Route = createFileRoute("/api/pix/checkout")({
   server: {
@@ -81,30 +80,45 @@ export const Route = createFileRoute("/api/pix/checkout")({
             }
           }
         } else {
-          console.warn("SUPABASE_SERVICE_ROLE_KEY ausente: PIX gerado sem rastreamento de pedido.");
+          console.warn("SUPABASE_SERVICE_ROLE_KEY ausente: criando PIX sem rastreamento.");
         }
 
-        const txid = orderId
-          ? txidFromOrderId(orderId)
-          : `OD${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}`.slice(0, 25);
+        // Cria cobrança PIX no BunnyPay
+        const externalReference = orderId ?? `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const origin = new URL(request.url).origin;
 
-        const { payload, valor, expiraEm } = generatePixPayload(
-          PIX_KEY,
-          STORE.name,
-          STORE.merchantCity,
-          amount,
-          txid,
-        );
-        const qrSvg = await generateQrSvg(payload);
+        const chargeResult = await createPixCharge({
+          amount: amount,
+          description: STORE.productName,
+          external_id: externalReference,
+          webhook_url: `${origin}/api/pix/webhook`,
+          expiration: 1800, // 30 min
+        });
+
+        if (!chargeResult.success || !chargeResult.transaction) {
+          console.error("[BunnyPay] Falha ao criar cobrança:", chargeResult.error);
+          return json({ ok: false, error: "bunnypay_create_failed", hint: chargeResult.error }, 500);
+        }
+
+        const transaction = chargeResult.transaction;
+        const bunnyPayId = transaction.id;
+        const qrCodeBase64 = transaction.qr_code_base64;
+        const qrCode = transaction.pix_copia_cola;
+        const expiresAt = transaction.expires_at ? new Date(transaction.expires_at).getTime() : Date.now() + 1800_000;
+
+        // Salva bunnyPayId no pedido se tiver orderId
+        if (orderId && bunnyPayId && admin) {
+          await admin.from("pedidos").update({ mp_payment_id: bunnyPayId }).eq("id", orderId);
+        }
 
         return json({
           ok: true,
           orderId,
-          txid,
-          payload,
-          qrSvg,
-          valor,
-          expiraEm,
+          bunnyPayId,
+          qrCodeBase64,
+          qrCode,
+          valor: amount,
+          expiraEm: Math.ceil((expiresAt - Date.now()) / 1000),
           tracked: orderId !== null,
         });
       },

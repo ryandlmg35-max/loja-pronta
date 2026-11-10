@@ -22,10 +22,11 @@ type PixStage = "idle" | "loading" | "ready" | "error";
 
 type PixData = {
   orderId: string | null;
-  txid: string;
-  payload: string;
-  qrSvg: string;
+  bunnyPayId: string | null;
+  qrCodeBase64: string;
+  qrCode: string; // copia e cola
   valor: number;
+  expiraEm: number;
   tracked: boolean;
 };
 
@@ -63,10 +64,11 @@ function PixPage() {
       }
       const next: PixData = {
         orderId: data.orderId ?? null,
-        txid: data.txid,
-        payload: data.payload,
-        qrSvg: data.qrSvg,
+        bunnyPayId: data.bunnyPayId ?? null,
+        qrCodeBase64: data.qrCodeBase64,
+        qrCode: data.qrCode,
         valor: data.valor,
+        expiraEm: data.expiraEm,
         tracked: Boolean(data.tracked),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
@@ -85,7 +87,7 @@ function PixPage() {
   async function copyPayload() {
     if (!pix) return;
     try {
-      await navigator.clipboard.writeText(pix.payload);
+      await navigator.clipboard.writeText(pix.qrCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -159,10 +161,17 @@ function PixPage() {
             <div className="mt-3 space-y-3 border-t border-[#e3edf5] pt-3">
               <div className="flex flex-col items-center gap-2">
                 <div className="w-56 h-56 rounded-xl border border-[#e3edf5] bg-white p-2 flex items-center justify-center">
-                  <div
-                    className="w-full h-full"
-                    dangerouslySetInnerHTML={{ __html: pix.qrSvg }}
-                  />
+                  {pix.qrCodeBase64 ? (
+                    <img
+                      src={`data:image/png;base64,${pix.qrCodeBase64}`}
+                      alt="QR Code PIX"
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-[#4a7893]">
+                      QR não disponível
+                    </div>
+                  )}
                 </div>
                 <p className="text-xs text-[#4a7893]">
                   Escaneie com o app do seu banco ou use o código copia e cola
@@ -184,7 +193,7 @@ function PixPage() {
                   <div className="mt-2 flex gap-2">
                     <textarea
                       readOnly
-                      value={pix.payload}
+                      value={pix.qrCode}
                       aria-label="Código PIX copia e cola"
                       className="min-h-[64px] flex-1 rounded-lg border border-[#c9dced] bg-white p-2 font-mono text-[10px] leading-tight text-[#12405f]"
                     />
@@ -209,7 +218,7 @@ function PixPage() {
               </div>
 
               <a
-                href={getWhatsAppUrl()}
+                href="https://wa.me/5562981906908?text=Quero%20enviar%20meu%20comprovante"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#25D366] py-2.5 text-sm font-bold text-white shadow-sm transition active:scale-[0.98]"

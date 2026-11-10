@@ -16,6 +16,7 @@ import { Route as SucessoRouteImport } from './routes/sucesso'
 import { Route as ApiAdminOrdersRouteImport } from './routes/api/admin/orders'
 import { Route as ApiOrdersStatusRouteImport } from './routes/api/orders/status'
 import { Route as ApiPixCheckoutRouteImport } from './routes/api/pix/checkout'
+import { Route as ApiPixWebhookRouteImport } from './routes/api/pix/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,6 +53,11 @@ const ApiPixCheckoutRoute = ApiPixCheckoutRouteImport.update({
   path: '/api/pix/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPixWebhookRoute = ApiPixWebhookRouteImport.update({
+  id: '/api/pix/webhook',
+  path: '/api/pix/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
+  '/api/pix/webhook': typeof ApiPixWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
+  '/api/pix/webhook': typeof ApiPixWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/api/admin/orders': typeof ApiAdminOrdersRoute
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
+  '/api/pix/webhook': typeof ApiPixWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
+    | '/api/pix/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
+    | '/api/pix/webhook'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/api/admin/orders'
     | '/api/orders/status'
     | '/api/pix/checkout'
+    | '/api/pix/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   ApiAdminOrdersRoute: typeof ApiAdminOrdersRoute
   ApiOrdersStatusRoute: typeof ApiOrdersStatusRoute
   ApiPixCheckoutRoute: typeof ApiPixCheckoutRoute
+  ApiPixWebhookRoute: typeof ApiPixWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPixCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/pix/webhook': {
+      id: '/api/pix/webhook'
+      path: '/api/pix/webhook'
+      fullPath: '/api/pix/webhook'
+      preLoaderRoute: typeof ApiPixWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminOrdersRoute: ApiAdminOrdersRoute,
   ApiOrdersStatusRoute: ApiOrdersStatusRoute,
   ApiPixCheckoutRoute: ApiPixCheckoutRoute,
+  ApiPixWebhookRoute: ApiPixWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
