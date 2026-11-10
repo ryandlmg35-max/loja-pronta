@@ -5,7 +5,7 @@
 export const STORE = {
   name: "Meus contendinhos",
   handle: "sofia",
-  price: 19.9,
+  price: 24.9,
   telegramUrl: "https://t.me/sofia",
   whatsappNumber: "5562981906908",
   coverImage: "/cover.jpg",
@@ -17,7 +17,7 @@ export const STORE = {
   warningText: "",
   steps: [
     "Informe seu nome completo e CPF e toque em \"Gerar PIX\".",
-    "Pague R$ 19,90 pelo QR Code ou pelo código copia e cola.",
+    "Pague R$ 24,90 pelo QR Code ou pelo código copia e cola.",
     "Assim que o pagamento for confirmado, seu link de acesso aparece aqui.",
   ],
   paymentInstruction:
