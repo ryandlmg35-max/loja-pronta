@@ -1,8 +1,8 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { STORE } from "@/data/store";
-import { isValidCpf } from "@/lib/bunnypay";
+import { paymentInput } from "@/lib/mercadopago";
 
 export const Route = createFileRoute("/pix")({
   head: () => ({
@@ -21,15 +21,9 @@ export const Route = createFileRoute("/pix")({
 type PixData = { orderId: string; accessToken: string; pix: string; qrSvg: string; valor: number };
 const STORAGE_KEY = "contedinhos_order";
 
-function detectDevice() {
-  const ua = navigator.userAgent.toLowerCase();
-  return /android/.test(ua) ? "android" : /iphone|ipad|ipod/.test(ua) ? "ios" : "web";
-}
-
 function PixPage() {
   const navigate = useNavigate();
-  const [nome, setNome] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pix, setPix] = useState<PixData | null>(null);
@@ -47,6 +41,7 @@ function PixPage() {
 
   async function checkStatus(silent = false) {
     if (!pix) return;
+    try {
     const res = await fetch(
       `/api/orders/status?orderId=${encodeURIComponent(pix.orderId)}&token=${encodeURIComponent(pix.accessToken)}`,
     );
@@ -56,7 +51,8 @@ function PixPage() {
       localStorage.removeItem(STORAGE_KEY);
       setPix(null);
     }
-    if (!silent) setStatusMsg(data?.message ?? "Não foi possível consultar agora.");
+    if (!silent) setStatusMsg(data?.message ?? data?.error ?? "Não foi possível consultar agora.");
+    } catch { if (!silent) setStatusMsg("Não foi possível consultar agora. Tente novamente."); }
   }
 
   useEffect(() => {
@@ -69,14 +65,13 @@ function PixPage() {
   async function generatePix(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (nome.trim().length < 3) return setError("Informe seu nome completo.");
-    if (!isValidCpf(cpf)) return setError("CPF inválido.");
+    if (!paymentInput.safeParse({ email }).success) return setError("Informe um e-mail válido.");
     setLoading(true);
     try {
       const res = await fetch("/api/pix/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, device: detectDevice() }),
+        body: JSON.stringify({ email }),
       });
       const data = await res.json();
       if (!data.ok) return setError(data.error ?? "Erro ao gerar o PIX");
@@ -102,7 +97,7 @@ function PixPage() {
     setStatusMsg("");
   }
 
-  const input = "w-full rounded-lg border border-[#c9dced] bg-white p-2.5 text-[#12405f]";
+  const input = "w-full rounded-lg border border-input bg-background p-2.5 text-foreground";
 
   return (
     <main className="min-h-screen bg-[#e8f4fc] pb-12">
@@ -139,16 +134,14 @@ function PixPage() {
 
           {!pix && (
             <form onSubmit={generatePix} className="mt-3 space-y-2">
-              <input className={input} placeholder="Nome completo" value={nome} onChange={(e) => setNome(e.target.value)} autoComplete="name" />
-              <input className={input} placeholder="CPF" inputMode="numeric" value={cpf} onChange={(e) => setCpf(e.target.value)} />
-              {error && <p className="text-sm text-red-700">{error}</p>}
-              <button type="submit" disabled={loading} className="w-full rounded-xl bg-[#e0245e] py-3.5 text-base font-bold text-white disabled:opacity-60">
-                {loading ? "Gerando PIX…" : "Gerar PIX"}
-              </button>
+              <input className={input} type="email" aria-label="E-mail" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              <Button type="submit" disabled={loading} className="w-full py-6 text-base font-bold">
+                {loading ? "Gerando PIX…" : "Gerar PIX com Mercado Pago"}
+              </Button>
             </form>
           )}
 
-          {import.meta.env.DEV && <Button asChild variant="outline" className="mt-3 w-full"><Link to="/mercado-pago-teste">Teste Mercado Pago</Link></Button>}
 
           {pix && (
             <div className="mt-3 space-y-3 border-t border-[#e3edf5] pt-3">

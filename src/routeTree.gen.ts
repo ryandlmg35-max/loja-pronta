@@ -19,6 +19,7 @@ import { Route as ApiAdminOrdersRouteImport } from './routes/api/admin/orders'
 import { Route as ApiOrdersStatusRouteImport } from './routes/api/orders/status'
 import { Route as ApiPixCheckoutRouteImport } from './routes/api/pix/checkout'
 import { Route as ApiPublicBunnypayPostbackRouteImport } from './routes/api/public/bunnypay/postback'
+import { Route as ApiPublicMercadopagoWebhookRouteImport } from './routes/api/public/mercadopago/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -71,6 +72,12 @@ const ApiPublicBunnypayPostbackRoute =
     path: '/api/public/bunnypay/postback',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicMercadopagoWebhookRoute =
+  ApiPublicMercadopagoWebhookRouteImport.update({
+    id: '/api/public/mercadopago/webhook',
+    path: '/api/public/mercadopago/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
   '/api/public/bunnypay/postback': typeof ApiPublicBunnypayPostbackRoute
+  '/api/public/mercadopago/webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -95,6 +103,7 @@ export interface FileRoutesByTo {
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
   '/api/public/bunnypay/postback': typeof ApiPublicBunnypayPostbackRoute
+  '/api/public/mercadopago/webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -108,6 +117,7 @@ export interface FileRoutesById {
   '/api/orders/status': typeof ApiOrdersStatusRoute
   '/api/pix/checkout': typeof ApiPixCheckoutRoute
   '/api/public/bunnypay/postback': typeof ApiPublicBunnypayPostbackRoute
+  '/api/public/mercadopago/webhook': typeof ApiPublicMercadopagoWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/api/orders/status'
     | '/api/pix/checkout'
     | '/api/public/bunnypay/postback'
+    | '/api/public/mercadopago/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -134,6 +145,7 @@ export interface FileRouteTypes {
     | '/api/orders/status'
     | '/api/pix/checkout'
     | '/api/public/bunnypay/postback'
+    | '/api/public/mercadopago/webhook'
   id:
     | '__root__'
     | '/'
@@ -146,6 +158,7 @@ export interface FileRouteTypes {
     | '/api/orders/status'
     | '/api/pix/checkout'
     | '/api/public/bunnypay/postback'
+    | '/api/public/mercadopago/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -159,6 +172,7 @@ export interface RootRouteChildren {
   ApiOrdersStatusRoute: typeof ApiOrdersStatusRoute
   ApiPixCheckoutRoute: typeof ApiPixCheckoutRoute
   ApiPublicBunnypayPostbackRoute: typeof ApiPublicBunnypayPostbackRoute
+  ApiPublicMercadopagoWebhookRoute: typeof ApiPublicMercadopagoWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -233,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicBunnypayPostbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/mercadopago/webhook': {
+      id: '/api/public/mercadopago/webhook'
+      path: '/api/public/mercadopago/webhook'
+      fullPath: '/api/public/mercadopago/webhook'
+      preLoaderRoute: typeof ApiPublicMercadopagoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -247,6 +268,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiOrdersStatusRoute: ApiOrdersStatusRoute,
   ApiPixCheckoutRoute: ApiPixCheckoutRoute,
   ApiPublicBunnypayPostbackRoute: ApiPublicBunnypayPostbackRoute,
+  ApiPublicMercadopagoWebhookRoute: ApiPublicMercadopagoWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

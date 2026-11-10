@@ -23,15 +23,26 @@ export const Route = createFileRoute("/api/orders/status")({
 
         const { data: order } = await admin
           .from("pedidos")
-          .select("status, acesso_token")
+          .select("id, status, acesso_token, mp_payment_id, valor_total")
           .eq("id", orderId)
           .maybeSingle();
         if (!order?.acesso_token || !safeEqual(order.acesso_token, token)) {
           return json({ ok: false, error: "pedido_nao_encontrado" }, 404);
         }
 
-        const link = order.status === "pago" ? (process.env["PRIVATE_ACCESS_LINK"] ?? null) : null;
-        return json({ ok: true, status: order.status, message: MESSAGES[order.status] ?? "", link });
+        let status = order.status;
+        if (order.mp_payment_id) {
+          const key = process.env["MERCADOPAGO_ACCESS_TOKEN"];
+          if (!key) return json({ ok: false, error: "Confirmação indisponível. Tente novamente." }, 503);
+          try {
+            const { synchronizeMpOrder } = await import("@/lib/server/mercadopago.server");
+            status = await synchronizeMpOrder(admin, order, key);
+          } catch {
+            return json({ ok: false, error: "Não foi possível confirmar agora. Tente novamente." }, 503);
+          }
+        }
+        const link = status === "pago" ? (process.env["PRIVATE_ACCESS_LINK"] ?? null) : null;
+        return Response.json({ ok: true, status, message: MESSAGES[status] ?? "", link }, { headers: { "Cache-Control": "no-store, private" } });
       },
     },
   },
