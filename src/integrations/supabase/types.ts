@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      bunnypay_postbacks: {
+        Row: {
+          id: string
+          payload: Json
+          recebido_em: string
+          resultado: string
+          transaction_id: string | null
+        }
+        Insert: {
+          id?: string
+          payload: Json
+          recebido_em?: string
+          resultado: string
+          transaction_id?: string | null
+        }
+        Update: {
+          id?: string
+          payload?: Json
+          recebido_em?: string
+          resultado?: string
+          transaction_id?: string | null
+        }
+        Relationships: []
+      }
       pedido_itens: {
         Row: {
           id: string
@@ -55,25 +79,37 @@ export type Database = {
       }
       pedidos: {
         Row: {
+          acesso_token: string | null
+          bunnypay_transaction_id: string | null
           criado_em: string
           id: string
           mp_payment_id: string | null
+          pagador_nome: string | null
+          pago_em: string | null
           status: Database["public"]["Enums"]["pedido_status"]
           usuario_id: string
           valor_total: number
         }
         Insert: {
+          acesso_token?: string | null
+          bunnypay_transaction_id?: string | null
           criado_em?: string
           id?: string
           mp_payment_id?: string | null
+          pagador_nome?: string | null
+          pago_em?: string | null
           status?: Database["public"]["Enums"]["pedido_status"]
           usuario_id?: string
           valor_total?: number
         }
         Update: {
+          acesso_token?: string | null
+          bunnypay_transaction_id?: string | null
           criado_em?: string
           id?: string
           mp_payment_id?: string | null
+          pagador_nome?: string | null
+          pago_em?: string | null
           status?: Database["public"]["Enums"]["pedido_status"]
           usuario_id?: string
           valor_total?: number

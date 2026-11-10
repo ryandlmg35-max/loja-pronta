@@ -1,115 +1,113 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { STORE } from "@/data/store";
+import { isValidCpf } from "@/lib/bunnypay";
 
 export const Route = createFileRoute("/pix")({
   head: () => ({
     meta: [
       { title: `${STORE.name} — PIX` },
-      { name: "description", content: `${STORE.name}. Pagamento via PIX. ${STORE.paymentInstruction}` },
+      { name: "description", content: `${STORE.name}. Pagamento via PIX com confirmação automática.` },
       { property: "og:title", content: `${STORE.name} — PIX` },
       { property: "og:description", content: STORE.paymentInstruction },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: STORE.coverImage },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
     ],
   }),
   component: PixPage,
 });
 
-type PixStage = "idle" | "loading" | "ready" | "error";
+type PixData = { orderId: string; accessToken: string; pix: string; qrSvg: string; valor: number };
+const STORAGE_KEY = "contedinhos_order";
 
-type PixData = {
-  orderId: string | null;
-  bunnyPayId: string | null;
-  qrCodeBase64: string;
-  qrCode: string; // copia e cola
-  valor: number;
-  expiraEm: number;
-  tracked: boolean;
-};
-
-const STORAGE_KEY = "loja_pronta_order";
+function detectDevice() {
+  const ua = navigator.userAgent.toLowerCase();
+  return /android/.test(ua) ? "android" : /iphone|ipad|ipod/.test(ua) ? "ios" : "web";
+}
 
 function PixPage() {
-  const [stage, setStage] = useState<PixStage>("idle");
-  const [pix, setPix] = useState<PixData | null>(null);
+  const navigate = useNavigate();
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showPayload, setShowPayload] = useState(false);
+  const [pix, setPix] = useState<PixData | null>(null);
+  const [statusMsg, setStatusMsg] = useState("");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return;
     try {
-      const parsed = JSON.parse(saved) as PixData;
-      setPix(parsed);
-      setStage("ready");
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null") as PixData | null;
+      if (saved?.orderId && saved.pix) setPix(saved);
     } catch {
       localStorage.removeItem(STORAGE_KEY);
     }
   }, []);
 
-  async function generatePix() {
-    setStage("loading");
+  async function checkStatus(silent = false) {
+    if (!pix) return;
+    const res = await fetch(
+      `/api/orders/status?orderId=${encodeURIComponent(pix.orderId)}&token=${encodeURIComponent(pix.accessToken)}`,
+    );
+    const data = await res.json().catch(() => null);
+    if (data?.ok && data.status === "pago") return navigate({ to: "/sucesso" });
+    if (data?.ok && data.status === "cancelado") {
+      localStorage.removeItem(STORAGE_KEY);
+      setPix(null);
+    }
+    if (!silent) setStatusMsg(data?.message ?? "Não foi possível consultar agora.");
+  }
+
+  useEffect(() => {
+    if (!pix) return;
+    const id = setInterval(() => void checkStatus(true), 5000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pix]);
+
+  async function generatePix(e: React.FormEvent) {
+    e.preventDefault();
     setError("");
+    if (nome.trim().length < 3) return setError("Informe seu nome completo.");
+    if (!isValidCpf(cpf)) return setError("CPF inválido.");
+    setLoading(true);
     try {
-      const res = await fetch("/api/pix/checkout", { method: "POST" });
+      const res = await fetch("/api/pix/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, cpf, device: detectDevice() }),
+      });
       const data = await res.json();
-      if (!data.ok) {
-        setError(data.hint ? `${data.error} — ${data.hint}` : (data.error ?? "Erro ao gerar o PIX"));
-        setStage("error");
-        return;
-      }
+      if (!data.ok) return setError(data.error ?? "Erro ao gerar o PIX");
       const next: PixData = {
-        orderId: data.orderId ?? null,
-        bunnyPayId: data.bunnyPayId ?? null,
-        qrCodeBase64: data.qrCodeBase64,
-        qrCode: data.qrCode,
+        orderId: data.orderId,
+        accessToken: data.accessToken,
+        pix: data.pix,
+        qrSvg: data.qrSvg,
         valor: data.valor,
-        expiraEm: data.expiraEm,
-        tracked: Boolean(data.tracked),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setPix(next);
-      setStage("ready");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Erro de rede ao gerar o PIX");
-      setStage("error");
-    }
-  }
-
-  function getWhatsAppUrl() {
-    return "https://wa.me/5562981906908?text=Quero%20enviar%20meu%20comprovante";
-  }
-
-  async function copyPayload() {
-    if (!pix) return;
-    try {
-      await navigator.clipboard.writeText(pix.qrCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch {
-      setShowPayload(true);
+      setError("Erro de rede ao gerar o PIX");
+    } finally {
+      setLoading(false);
     }
   }
+
+  function newOrder() {
+    localStorage.removeItem(STORAGE_KEY);
+    setPix(null);
+    setStatusMsg("");
+  }
+
+  const input = "w-full rounded-lg border border-[#c9dced] bg-white p-2.5 text-[#12405f]";
 
   return (
     <main className="min-h-screen bg-[#e8f4fc] pb-12">
       <div className="mx-auto flex max-w-md flex-col gap-4 px-4 pt-6">
         <section className="rounded-2xl border border-[#b9dcf2] bg-white p-3 shadow-sm">
-          <img
-            src={STORE.coverImage}
-            alt={`${STORE.name} — capa`}
-            className="w-full rounded-xl object-cover"
-          />
-
-          <div className="mt-3 rounded-xl border border-[#f0b9c8] bg-[#fff2f6] p-3">
-            <p className="text-sm font-semibold leading-snug text-[#7d1f3a]">
-              {STORE.paymentInstruction}
-            </p>
-          </div>
+          <img src={STORE.coverImage} alt={`${STORE.name} — capa`} className="w-full rounded-xl object-cover" />
 
           <ol className="mt-3 space-y-1.5 px-1 text-sm leading-snug text-[#12405f]">
             {STORE.steps.map((step, i) => (
@@ -122,116 +120,44 @@ function PixPage() {
 
           <div className="mt-3 rounded-xl bg-[#f4f8fb] p-3 text-center">
             <p className="text-sm font-semibold text-[#12405f]">Valor</p>
-            <p className="text-2xl font-extrabold text-[#0f8a4f]">
-              R$ {STORE.price.toFixed(2).replace(".", ",")}
-            </p>
+            <p className="text-2xl font-extrabold text-[#0f8a4f]">R$ {STORE.price.toFixed(2).replace(".", ",")}</p>
           </div>
 
-          {stage === "idle" && (
-            <button
-              type="button"
-              onClick={generatePix}
-              className="mt-3 w-full rounded-xl bg-[#e0245e] py-3.5 text-base font-bold text-white shadow-sm transition active:scale-[0.98]"
-            >
-              Gerar PIX
-            </button>
-          )}
-
-          {stage === "loading" && (
-            <button
-              type="button"
-              disabled
-              className="mt-3 w-full rounded-xl bg-[#e0245e] py-3.5 text-base font-bold text-white opacity-60"
-            >
-              Gerando PIX…
-            </button>
-          )}
-
-          {stage === "error" && (
-            <div className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-              <p className="font-semibold">Não foi possível gerar o PIX.</p>
-              <p className="mt-1 break-words">{error}</p>
-              <button type="button" onClick={generatePix} className="mt-2 underline">
-                Tentar novamente
+          {!pix && (
+            <form onSubmit={generatePix} className="mt-3 space-y-2">
+              <input className={input} placeholder="Nome completo" value={nome} onChange={(e) => setNome(e.target.value)} autoComplete="name" />
+              <input className={input} placeholder="CPF" inputMode="numeric" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+              {error && <p className="text-sm text-red-700">{error}</p>}
+              <button type="submit" disabled={loading} className="w-full rounded-xl bg-[#e0245e] py-3.5 text-base font-bold text-white disabled:opacity-60">
+                {loading ? "Gerando PIX…" : "Gerar PIX"}
               </button>
-            </div>
+            </form>
           )}
 
-          {stage === "ready" && pix && (
+          {pix && (
             <div className="mt-3 space-y-3 border-t border-[#e3edf5] pt-3">
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-56 h-56 rounded-xl border border-[#e3edf5] bg-white p-2 flex items-center justify-center">
-                  {pix.qrCodeBase64 ? (
-                    <img
-                      src={`data:image/png;base64,${pix.qrCodeBase64}`}
-                      alt="QR Code PIX"
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[#4a7893]">
-                      QR não disponível
-                    </div>
-                  )}
-                </div>
-                <p className="text-xs text-[#4a7893]">
-                  Escaneie com o app do seu banco ou use o código copia e cola
-                </p>
+              <div className="mx-auto h-56 w-56 rounded-xl border border-[#e3edf5] bg-white p-2">
+                <div className="h-full w-full" dangerouslySetInnerHTML={{ __html: pix.qrSvg }} />
               </div>
-
-              <div className="rounded-xl bg-[#f4f8fb] p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold text-[#12405f]">Código PIX (copia e cola)</span>
-                  <button
-                    type="button"
-                    onClick={() => setShowPayload((v) => !v)}
-                    className="text-xs font-semibold text-[#1e88c7] underline"
-                  >
-                    {showPayload ? "Ocultar" : "Mostrar"}
-                  </button>
-                </div>
-                {showPayload && (
-                  <div className="mt-2 flex gap-2">
-                    <textarea
-                      readOnly
-                      value={pix.qrCode}
-                      aria-label="Código PIX copia e cola"
-                      className="min-h-[64px] flex-1 rounded-lg border border-[#c9dced] bg-white p-2 font-mono text-[10px] leading-tight text-[#12405f]"
-                    />
-                    <button
-                      type="button"
-                      onClick={copyPayload}
-                      className="h-fit rounded-lg bg-[#1e88c7] px-3 py-2 text-sm font-semibold text-white"
-                    >
-                      {copied ? "Copiado!" : "Copiar"}
-                    </button>
-                  </div>
-                )}
-                {!showPayload && (
-                  <button
-                    type="button"
-                    onClick={copyPayload}
-                    className="mt-2 w-full rounded-lg bg-[#1e88c7] py-2 text-sm font-semibold text-white"
-                  >
-                    {copied ? "Código copiado!" : "Copiar código PIX"}
-                  </button>
-                )}
-              </div>
-
-              <a
-                href="https://wa.me/5562981906908?text=Quero%20enviar%20meu%20comprovante"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#25D366] py-2.5 text-sm font-bold text-white shadow-sm transition active:scale-[0.98]"
+              <textarea readOnly value={pix.pix} aria-label="Código PIX copia e cola" className="min-h-[64px] w-full rounded-lg border border-[#c9dced] p-2 font-mono text-[10px] text-[#12405f]" />
+              <button
+                type="button"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(pix.pix).catch(() => {});
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="w-full rounded-lg bg-[#1e88c7] py-2 text-sm font-semibold text-white"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.521-.075-.149-.669-1.612-.916-2.207-.247-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.679m-5.421 7.403h-.004a19.79 19.79 0 01-4.768-1.02 12.29 12.29 0 01-5.551-2.584 6.477 6.477 0 01-2.597-3.8 6.96 6.96 0 01-.163-2.662 4.284 4.284 0 011.181-3.238 7.153 7.153 0 013.289-2.505 9.325 9.325 0 013.769-.6 7.682 7.682 0 013.412.366c2.429 1.054 4.537 3.251 5.196 5.877.296.827.37 1.696.223 2.428-.132.696-.553 1.404-1.128 1.856-.58.455-1.414.683-2.088.683-.294 0-.597-.082-.868-.264zm0 0" />
-                </svg>
-                Enviar comprovante
-              </a>
-
-              <p className="text-center text-xs text-[#4a7893]">
-                Não conseguiu abrir? Fale comigo na DM do TikTok: {STORE.handle}
-              </p>
+                {copied ? "Código copiado!" : "Copiar código PIX"}
+              </button>
+              <button type="button" onClick={() => void checkStatus()} className="w-full rounded-xl bg-[#0f8a4f] py-3 font-bold text-white">
+                Consultar pagamento
+              </button>
+              {statusMsg && <p className="text-center text-sm text-[#12405f]">{statusMsg}</p>}
+              <button type="button" onClick={newOrder} className="w-full text-xs text-[#4a7893] underline">
+                Gerar um novo PIX
+              </button>
             </div>
           )}
         </section>
