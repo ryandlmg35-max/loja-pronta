@@ -1,21 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { generatePixPayload, generateQrSvg, txidFromOrderId } from "@/lib/pix";
+import { z } from "zod";
+import { generateQrSvg } from "@/lib/pix";
 import { STORE } from "@/data/store";
-import { PIX_KEY } from "@/lib/server/pix-key.server";
+import { isValidCpf, onlyDigits } from "@/lib/bunnypay";
 import { getAdminClient, isSameOrigin, json } from "@/lib/server/admin-client";
 
-type CheckoutResponse =
-  | {
-      ok: true;
-      orderId: string | null;
-      txid: string;
-      payload: string;
-      qrSvg: string;
-      valor: number;
-      expiraEm: number;
-      tracked: boolean;
-    }
-  | { ok: false; error: string };
+const Body = z.object({
+  nome: z.string().trim().min(3).max(120),
+  cpf: z.string().refine(isValidCpf, "cpf_invalido"),
+  device: z.enum(["android", "ios", "web"]).default("web"),
+});
 
 export const Route = createFileRoute("/api/pix/checkout")({
   server: {
@@ -23,89 +17,62 @@ export const Route = createFileRoute("/api/pix/checkout")({
       POST: async ({ request }): Promise<Response> => {
         if (!isSameOrigin(request)) return json({ ok: false, error: "forbidden_origin" }, 403);
 
-        const amount = STORE.price;
-        const admin = await getAdminClient();
-
-        let orderId: string | null = null;
-
-        if (admin) {
-          const { data: existing } = await admin
-            .from("produtos")
-            .select("id")
-            .eq("nome", STORE.productName)
-            .maybeSingle();
-
-          let productId = existing?.id as string | undefined;
-          if (!productId) {
-            const { data: created } = await admin
-              .from("produtos")
-              .insert({
-                nome: STORE.productName,
-                descricao: STORE.productDescription,
-                preco: amount,
-                imagem_url: STORE.coverImage,
-                estoque: 999,
-              })
-              .select("id")
-              .single();
-            productId = created?.id as string | undefined;
-          }
-
-          const { data: order, error: orderError } = await admin
-            .from("pedidos")
-            .insert({
-              usuario_id: crypto.randomUUID(),
-              status: "pendente",
-              valor_total: amount,
-            })
-            .select("id")
-            .single();
-
-          if (orderError || !order) {
-            console.error("pedidos insert failed:", orderError?.message);
-          } else {
-            orderId = order.id as string;
-
-            if (productId) {
-              const { error: itemError } = await admin.from("pedido_itens").insert({
-                pedido_id: orderId,
-                produto_id: productId,
-                quantidade: 1,
-                preco_unitario: amount,
-              });
-
-              if (itemError) {
-                await admin.from("pedidos").delete().eq("id", orderId);
-                orderId = null;
-              }
-            }
-          }
-        } else {
-          console.warn("SUPABASE_SERVICE_ROLE_KEY ausente: PIX gerado sem rastreamento de pedido.");
+        const parsed = Body.safeParse(await request.json().catch(() => ({})));
+        if (!parsed.success) {
+          const cpfErr = parsed.error.issues.some((i) => i.path[0] === "cpf");
+          return json({ ok: false, error: cpfErr ? "CPF inválido" : "Informe nome completo e CPF" }, 400);
         }
 
-        const txid = orderId
-          ? txidFromOrderId(orderId)
-          : `OD${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 8).toUpperCase()}`.slice(0, 25);
+        const admin = await getAdminClient();
+        if (!admin) return json({ ok: false, error: "Servidor indisponível" }, 503);
 
-        const { payload, valor, expiraEm } = generatePixPayload(
-          PIX_KEY,
-          STORE.name,
-          STORE.merchantCity,
-          amount,
-          txid,
-        );
-        const qrSvg = await generateQrSvg(payload);
+        const amount = STORE.price;
+        const acessoToken = crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
+
+        const { data: order, error } = await admin
+          .from("pedidos")
+          .insert({
+            usuario_id: crypto.randomUUID(),
+            status: "pendente",
+            valor_total: amount,
+            acesso_token: acessoToken,
+            pagador_nome: parsed.data.nome,
+          })
+          .select("id")
+          .single();
+        if (error || !order) return json({ ok: false, error: "Não foi possível criar o pedido" }, 500);
+
+        const origin = new URL(request.url).origin;
+        const token = process.env["BUNNYPAY_POSTBACK_TOKEN"];
+        const postback =
+          origin.startsWith("https://") && token
+            ? `${origin}/api/public/bunnypay/postback?t=${encodeURIComponent(token)}`
+            : undefined;
+
+        const { createCashin } = await import("@/lib/server/bunnypay.server");
+        const charge = await createCashin({
+          nome: parsed.data.nome,
+          cpf: onlyDigits(parsed.data.cpf),
+          valor: amount,
+          descricao: STORE.productName,
+          postback,
+          device: parsed.data.device,
+        });
+
+        if (!charge.ok) {
+          await admin.from("pedidos").update({ status: "cancelado" }).eq("id", order.id);
+          return json({ ok: false, error: "Não foi possível gerar o PIX. Tente novamente." }, 502);
+        }
+
+        await admin.from("pedidos").update({ bunnypay_transaction_id: charge.id }).eq("id", order.id);
 
         return json({
           ok: true,
-          orderId,
-          txid,
-          payload,
-          qrSvg,
-          valor,
-          expiraEm,
-          tracked: orderId !== null,
+          orderId: order.id,
+          accessToken: acessoToken,
+          pix: charge.pix,
+          qrSvg: await generateQrSvg(charge.pix),
+          valor: amount,
         });
       },
     },
