@@ -1,5 +1,6 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { STORE } from "@/data/store";
 import { isValidCpf } from "@/lib/bunnypay";
 
@@ -146,6 +147,8 @@ function PixPage() {
               </button>
             </form>
           )}
+
+          {import.meta.env.DEV && <Button asChild variant="outline" className="mt-3 w-full"><Link to="/mercado-pago-teste">Teste Mercado Pago</Link></Button>}
 
           {pix && (
             <div className="mt-3 space-y-3 border-t border-[#e3edf5] pt-3">
