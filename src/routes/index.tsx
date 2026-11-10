@@ -10,7 +10,6 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: `${STORE.name} — ${STORE.handle}` },
       { property: "og:description", content: STORE.warningTitle },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: STORE.coverImage },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
     ],
