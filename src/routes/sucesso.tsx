@@ -1,7 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-
-const STORAGE_KEY = "contedinhos_order";
+import { Button } from "@/components/ui/button";
+import { useOrderStatus } from "@/hooks/use-order-status";
+import { ORDER_STORAGE_KEY, type OrderCredentials } from "@/lib/order-status";
 
 export const Route = createFileRoute("/sucesso")({
   head: () => ({
@@ -18,49 +19,45 @@ export const Route = createFileRoute("/sucesso")({
 });
 
 function SuccessPage() {
-  const [state, setState] = useState<"checking" | "invalid" | "ok">("checking");
-  const [link, setLink] = useState("");
+  const [order, setOrder] = useState<OrderCredentials | null>(null);
+  const [ready, setReady] = useState(false);
+  const { result, error, checking, retry } = useOrderStatus(order);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null") as
-          | { orderId: string; accessToken: string }
-          | null;
-        if (!saved?.orderId) return setState("invalid");
-        const res = await fetch(
-          `/api/orders/status?orderId=${encodeURIComponent(saved.orderId)}&token=${encodeURIComponent(saved.accessToken)}`,
-        );
-        const data = await res.json();
-        if (data.ok && data.status === "pago" && data.link) {
-          setLink(data.link);
-          setState("ok");
-        } else setState("invalid");
-      } catch {
-        setState("invalid");
-      }
-    })();
+    try {
+      const saved = JSON.parse(localStorage.getItem(ORDER_STORAGE_KEY) ?? "null");
+      if (typeof saved?.orderId === "string" && typeof saved?.accessToken === "string") setOrder(saved);
+    } catch { /* Keep the missing-order state; never use browser storage as payment proof. */ }
+    finally { setReady(true); }
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#e8f4fc] flex items-center justify-center px-4">
-      <div className="max-w-md w-full rounded-2xl border border-[#b9dcf2] bg-white p-6 text-center shadow-sm">
-        {state === "checking" && <p className="text-[#12405f]">Verificando pagamento...</p>}
-        {state === "invalid" && (
+    <main className="min-h-screen bg-secondary flex items-center justify-center px-4">
+      <div className="max-w-md w-full rounded-lg border border-border bg-card p-6 text-center text-card-foreground shadow-sm">
+        {!ready && <p role="status">Verificando pagamento…</p>}
+        {ready && !order && (
           <>
-            <h1 className="text-xl font-extrabold text-[#0f3d5c] mb-2">Pagamento não confirmado</h1>
-            <p className="text-[#12405f] mb-4">Volte e toque em "Consultar pagamento".</p>
-            <a href="/pix" className="block rounded-xl bg-[#1e88c7] py-3 font-bold text-white">Voltar para o PIX</a>
+            <h1 className="text-xl font-extrabold mb-2">Pedido não encontrado neste navegador</h1>
+            <p className="mb-4">Abra esta página no mesmo navegador em que gerou o PIX. Se já pagou, não pague novamente.</p>
+            <Button asChild className="w-full h-12"><Link to="/pix">Voltar para o PIX</Link></Button>
           </>
         )}
-        {state === "ok" && (
+        {ready && order && result?.status !== "pago" && (
           <>
-            <h1 className="text-2xl font-extrabold text-[#0f3d5c] mb-2">Pagamento confirmado!</h1>
-            <p className="text-[#12405f] mb-6">Seu acesso foi liberado.</p>
-            <a href={link} target="_blank" rel="noopener noreferrer" className="block rounded-xl bg-[#1e88c7] py-3.5 font-bold text-white">
+            <h1 className="text-xl font-extrabold mb-2">{result?.status === "cancelado" ? "Pedido cancelado" : "Confirmando pagamento"}</h1>
+            <p role={error ? "alert" : "status"} className="mb-4">{error || result?.message || "Consultando a confirmação do seu PIX…"}</p>
+            <Button onClick={retry} disabled={checking} className="w-full h-12">{checking ? "Consultando pagamento…" : "Consultar novamente"}</Button>
+            <Button asChild variant="link" className="mt-2"><Link to="/pix">Voltar para o PIX</Link></Button>
+          </>
+        )}
+        {result?.status === "pago" && result.link && (
+          <>
+            <h1 className="text-2xl font-extrabold mb-2">Pagamento confirmado!</h1>
+            <p className="mb-6">Seu acesso foi liberado.</p>
+            <Button asChild className="w-full h-12"><a href={result.link} target="_blank" rel="noopener noreferrer">
               Acessar conteúdo
-            </a>
-            <p className="mt-3 text-xs font-mono text-[#1e88c7] break-all">{link}</p>
+            </a></Button>
+            <p className="mt-3 text-xs font-mono text-muted-foreground break-all">{result.link}</p>
           </>
         )}
       </div>

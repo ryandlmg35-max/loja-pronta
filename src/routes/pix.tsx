@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { STORE } from "@/data/store";
 import { paymentInput } from "@/lib/mercadopago";
+import { useOrderStatus } from "@/hooks/use-order-status";
 
 export const Route = createFileRoute("/pix")({
   head: () => ({
@@ -27,8 +28,8 @@ function PixPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pix, setPix] = useState<PixData | null>(null);
-  const [statusMsg, setStatusMsg] = useState("");
   const [copied, setCopied] = useState(false);
+  const { result, error: statusError, checking, retry } = useOrderStatus(pix);
 
   useEffect(() => {
     try {
@@ -39,28 +40,14 @@ function PixPage() {
     }
   }, []);
 
-  async function checkStatus(silent = false) {
-    if (!pix) return;
-    try {
-    const res = await fetch(
-      `/api/orders/status?orderId=${encodeURIComponent(pix.orderId)}&token=${encodeURIComponent(pix.accessToken)}`,
-    );
-    const data = await res.json().catch(() => null);
-    if (data?.ok && data.status === "pago") return navigate({ to: "/sucesso" });
-    if (data?.ok && data.status === "cancelado") {
+  useEffect(() => {
+    if (result?.status === "pago") void navigate({ to: "/sucesso" });
+    if (result?.status === "cancelado") {
       localStorage.removeItem(STORAGE_KEY);
       setPix(null);
+      setError("Pedido cancelado. Você pode gerar um novo PIX.");
     }
-    if (!silent) setStatusMsg(data?.message ?? data?.error ?? "Não foi possível consultar agora.");
-    } catch { if (!silent) setStatusMsg("Não foi possível consultar agora. Tente novamente."); }
-  }
-
-  useEffect(() => {
-    if (!pix) return;
-    const id = setInterval(() => void checkStatus(true), 5000);
-    return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pix]);
+  }, [result, navigate]);
 
   async function generatePix(e: React.FormEvent) {
     e.preventDefault();
@@ -94,7 +81,6 @@ function PixPage() {
   function newOrder() {
     localStorage.removeItem(STORAGE_KEY);
     setPix(null);
-    setStatusMsg("");
   }
 
   const input = "w-full rounded-lg border border-input bg-background p-2.5 text-foreground";
@@ -160,10 +146,10 @@ function PixPage() {
               >
                 {copied ? "Código copiado!" : "Copiar código PIX"}
               </button>
-              <button type="button" onClick={() => void checkStatus()} className="w-full rounded-xl bg-[#0f8a4f] py-3 font-bold text-white">
-                Consultar pagamento
-              </button>
-              {statusMsg && <p className="text-center text-sm text-[#12405f]">{statusMsg}</p>}
+              <Button type="button" onClick={retry} disabled={checking} className="h-12 w-full font-bold">
+                {checking ? "Consultando pagamento…" : "Consultar pagamento"}
+              </Button>
+              {(statusError || result?.message) && <p role={statusError ? "alert" : "status"} className="text-center text-sm text-foreground">{statusError || result?.message}</p>}
               <button type="button" onClick={newOrder} className="w-full text-xs text-[#4a7893] underline">
                 Gerar um novo PIX
               </button>
