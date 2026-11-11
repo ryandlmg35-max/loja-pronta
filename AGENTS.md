@@ -34,3 +34,4 @@ use the editor.
 - Keep Mercado Pago generation probes separate and development-only, cancel probe charges immediately, and never create orders or grant access from them; this prevents test charges from granting real access.
 
 - Read payment credentials inside handlers and share Mercado Pago reconciliation between status checks and notifications, because notifications and browser state are not payment proof.
+- Share bounded, non-overlapping status polling between PIX and access pages, retry on network recovery and foreground return, and preserve order credentials on failures so customers never remain in an endless loading state.
