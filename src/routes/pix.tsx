@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { STORE } from "@/data/store";
 import { paymentInput } from "@/lib/mercadopago";
@@ -118,6 +119,16 @@ function PixPage() {
             <p className="text-2xl font-extrabold text-[#0f8a4f]">R$ {STORE.price.toFixed(2).replace(".", ",")}</p>
           </div>
 
+          <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50/80 p-3 text-emerald-950">
+            <div className="flex items-center gap-2 font-bold text-emerald-800 text-sm">
+              <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0" />
+              <span>{STORE.guaranteeTitle}</span>
+            </div>
+            <p className="mt-1 text-xs leading-relaxed text-emerald-900/90">
+              {STORE.guaranteeDescription}
+            </p>
+          </div>
+
           {!pix && (
             <form onSubmit={generatePix} className="mt-3 space-y-2">
               <input className={input} type="email" aria-label="E-mail" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
@@ -125,6 +136,10 @@ function PixPage() {
               <Button type="submit" disabled={loading} className="w-full py-6 text-base font-bold">
                 {loading ? "Gerando PIX…" : "Gerar PIX com Mercado Pago"}
               </Button>
+              <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-[#4a7893] pt-1">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <span>Pagamento Seguro · Garantia total de reembolso</span>
+              </p>
             </form>
           )}
 

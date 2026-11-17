@@ -58,6 +58,9 @@ function SuccessPage() {
               Acessar conteúdo
             </a></Button>
             <p className="mt-3 text-xs font-mono text-muted-foreground break-all">{result.link}</p>
+            <p className="mt-4 text-xs text-muted-foreground">
+              🛡️ Compra protegida com garantia de satisfação e reembolso.
+            </p>
           </>
         )}
       </div>

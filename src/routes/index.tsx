@@ -129,8 +129,8 @@ function TutorialLanding() {
             </svg>
           </Link>
 
-          <p className="text-center text-[11px] font-medium uppercase tracking-wider text-sky-400/60">
-            🔒 Sistema de Verificação Seguro · 2026
+          <p className="text-center text-[11px] font-medium uppercase tracking-wider text-sky-400/70">
+            🔒 Sistema Seguro · 100% Reembolsável
           </p>
         </section>
       </div>

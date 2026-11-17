@@ -28,4 +28,7 @@ export const STORE = {
     "Pagamento pendente. Se já pagou, toque em \"Enviar comprovante\" e mande o print.",
   pendingMessageNoTracking:
     "PIX gerado. Faça o pagamento e toque em \"Enviar comprovante\" pra mandar o print.",
+  guaranteeTitle: "Garantia de 7 Dias · 100% Reembolsável",
+  guaranteeDescription:
+    "Acesse o conteúdo e confira. Se você não gostar, devolvemos 100% do valor pago sem burocracia.",
 };
