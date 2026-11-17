@@ -41,7 +41,8 @@ export const Route = createFileRoute("/api/orders/status")({
             return json({ ok: false, error: "Não foi possível confirmar agora. Tente novamente." }, 503);
           }
         }
-        const link = status === "pago" ? (process.env["PRIVATE_ACCESS_LINK"] ?? null) : null;
+        const defaultLink = "https://precious-trifle-63d82d.netlify.app/";
+        const link = status === "pago" ? (process.env["PRIVATE_ACCESS_LINK"] || defaultLink) : null;
         return Response.json({ ok: true, status, message: MESSAGES[status] ?? "", link }, { headers: { "Cache-Control": "no-store, private" } });
       },
     },

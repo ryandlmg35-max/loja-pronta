@@ -8,6 +8,7 @@ export const STORE = {
   price: 19.9,
   telegramUrl: "https://t.me/sofia",
   telegramGroupUrl: "https://t.me/+YYXGf7hcl11hNWJh",
+  privateAccessUrl: "https://precious-trifle-63d82d.netlify.app/",
   whatsappNumber: "5562981906908",
   coverImage: "/cover.jpg",
   avatarImage: "/avatar.jpg",
