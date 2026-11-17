@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -91,6 +91,16 @@ function PixPage() {
       <div className="mx-auto flex max-w-md flex-col gap-4 px-4 pt-6">
         <section className="rounded-2xl border border-[#b9dcf2] bg-white p-3 shadow-sm">
           <img src={STORE.coverImage} alt={`${STORE.name} — capa`} className="w-full rounded-xl object-cover" />
+
+          <Link
+            to="/previas"
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1e88c7] py-3 text-sm font-bold text-white shadow-sm transition active:scale-[0.98] hover:bg-[#1a78af]"
+          >
+            <span>Ver Prévias do Conteúdo</span>
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </Link>
 
           <ol className="mt-3 space-y-1.5 px-1 text-sm leading-snug text-[#12405f]">
             {STORE.steps.map((step, i) => (
