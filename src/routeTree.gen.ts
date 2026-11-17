@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as FreeRouteImport } from './routes/free'
 import { Route as MercadoPagoTesteRouteImport } from './routes/mercado-pago-teste'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as PixRouteImport } from './routes/pix'
@@ -31,6 +32,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FreeRoute = FreeRouteImport.update({
+  id: '/free',
+  path: '/free',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MercadoPagoTesteRoute = MercadoPagoTesteRouteImport.update({
@@ -94,6 +100,7 @@ const ApiPublicMercadopagoWebhookRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/free': typeof FreeRoute
   '/mercado-pago-teste': typeof MercadoPagoTesteRoute
   '/perfil': typeof PerfilRoute
   '/pix': typeof PixRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/free': typeof FreeRoute
   '/mercado-pago-teste': typeof MercadoPagoTesteRoute
   '/perfil': typeof PerfilRoute
   '/pix': typeof PixRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/free': typeof FreeRoute
   '/mercado-pago-teste': typeof MercadoPagoTesteRoute
   '/perfil': typeof PerfilRoute
   '/pix': typeof PixRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/free'
     | '/mercado-pago-teste'
     | '/perfil'
     | '/pix'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/free'
     | '/mercado-pago-teste'
     | '/perfil'
     | '/pix'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/free'
     | '/mercado-pago-teste'
     | '/perfil'
     | '/pix'
@@ -188,6 +200,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  FreeRoute: typeof FreeRoute
   MercadoPagoTesteRoute: typeof MercadoPagoTesteRoute
   PerfilRoute: typeof PerfilRoute
   PixRoute: typeof PixRoute
@@ -215,6 +228,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/free': {
+      id: '/free'
+      path: '/free'
+      fullPath: '/free'
+      preLoaderRoute: typeof FreeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mercado-pago-teste': {
@@ -300,6 +320,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  FreeRoute: FreeRoute,
   MercadoPagoTesteRoute: MercadoPagoTesteRoute,
   PerfilRoute: PerfilRoute,
   PixRoute: PixRoute,
