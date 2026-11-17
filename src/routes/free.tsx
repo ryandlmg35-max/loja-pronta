@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Sparkles, Lock, ShieldCheck, Flame } from "lucide-react";
+import { ArrowLeft, Sparkles, Lock, Flame } from "lucide-react";
 import { STORE } from "@/data/store";
 
 export const Route = createFileRoute("/free")({
@@ -102,17 +102,6 @@ function FreeContentPage() {
               </div>
             </div>
           ))}
-        </section>
-
-        {/* Reassurance banner */}
-        <section className="mt-2 rounded-2xl border border-sky-900/60 bg-[#0d223a]/80 p-3.5 text-center text-xs text-slate-300 space-y-2 backdrop-blur-sm">
-          <div className="flex items-center justify-center gap-1.5 font-bold text-sky-300">
-            <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            <span>Garantia de 7 Dias · 100% Reembolsável</span>
-          </div>
-          <p className="text-[11px] text-slate-400">
-            Acesso imediato enviado após a confirmação do PIX de R$ {STORE.price.toFixed(2).replace(".", ",")}.
-          </p>
         </section>
       </div>
 
