@@ -97,14 +97,15 @@ function TutorialLanding() {
         {/* Video demonstration container */}
         <section className="rounded-3xl border border-sky-900/60 bg-[#0b1c30]/80 p-3 shadow-lg shadow-sky-950/60 backdrop-blur-sm">
           <div className="overflow-hidden rounded-2xl bg-black/40 border border-sky-950">
-            <video
-              src="/tutorial.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="mx-auto aspect-square w-full max-w-[320px] object-cover"
-            />
+            <picture>
+              <source srcSet="/tutorial.webp" type="image/webp" />
+              <img
+                src="/tutorial.gif"
+                alt="Tutorial animado passo a passo para abrir no navegador"
+                className="mx-auto aspect-square w-full max-w-[320px] object-cover"
+                loading="eager"
+              />
+            </picture>
           </div>
         </section>
 
