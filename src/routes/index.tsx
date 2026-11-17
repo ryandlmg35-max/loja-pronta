@@ -1,140 +1,169 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Sparkles, Flame, MessageCircle, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { STORE } from "@/data/store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: `Acesso Liberado — ${STORE.name}` },
-      { name: "description", content: "Siga os passos para liberar seu acesso no navegador." },
-      { property: "og:title", content: `Acesso Liberado — ${STORE.name}` },
-      { property: "og:description", content: "Siga os passos para liberar seu acesso no navegador." },
+      { title: `${STORE.name} — Perfil Oficial` },
+      { name: "description", content: `Acesse o conteúdo exclusivo de ${STORE.name}.` },
+      { property: "og:title", content: `${STORE.name} — Perfil Oficial` },
+      { property: "og:description", content: "Acesse o conteúdo free e o canal VIP oficial." },
       { property: "og:type", content: "website" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" },
     ],
   }),
-  component: TutorialLanding,
+  component: LinkBioPage,
 });
 
-function TutorialLanding() {
+function LinkBioPage() {
+  const whatsappUrl = `https://wa.me/${STORE.whatsappNumber}?text=Oi%20Sofia,%20vim%20pelo%20seu%20link!`;
+
   return (
-    <main className="relative min-h-screen bg-[#071322] text-white px-4 pt-5 pb-10 selection:bg-[#0284c7] selection:text-white">
-      {/* Background ambient light */}
+    <main className="relative min-h-screen bg-[#071322] text-white px-4 pt-8 pb-12 selection:bg-sky-500 selection:text-white flex flex-col justify-between">
+      {/* Background ambient lighting */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#0284c7]/20 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#38bdf8]/10 rounded-full blur-3xl" />
+        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-600/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative mx-auto flex max-w-md flex-col gap-4">
-        {/* Header with Title and Arrow pointing to TikTok's 3 dots */}
-        <header className="flex items-start justify-between gap-3 pt-2">
-          <h1 className="text-2xl font-black uppercase tracking-tight leading-tight text-white max-w-[240px]">
-            Siga os passos <br />
-            <span className="text-sky-400">para liberar</span>
-          </h1>
-
-          {/* Indicator pointing to top-right corner */}
-          <div className="flex flex-col items-center">
-            <div className="relative flex items-center justify-center h-14 w-14 rounded-2xl bg-gradient-to-tr from-[#0284c7] to-[#38bdf8] shadow-[0_0_20px_rgba(56,189,248,0.5)] animate-bounce">
-              <svg
-                className="h-8 w-8 text-white drop-shadow-md"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <line x1="7" y1="17" x2="17" y2="7" />
-                <polyline points="7 7 17 7 17 17" />
-              </svg>
-            </div>
-            <span className="mt-1 text-[11px] font-black uppercase tracking-wider text-rose-400 bg-rose-950/80 border border-rose-500/40 px-2 py-0.5 rounded-full shadow-sm animate-pulse">
-              Clique Aqui
+      <div className="relative mx-auto flex w-full max-w-md flex-col gap-6">
+        {/* Profile Header */}
+        <header className="flex flex-col items-center text-center gap-3">
+          <div className="relative">
+            <img
+              src={STORE.avatarImage}
+              alt={STORE.name}
+              className="h-28 w-28 rounded-full object-cover ring-4 ring-sky-500/30 shadow-xl"
+            />
+            <span className="absolute bottom-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white shadow-md ring-2 ring-[#071322]">
+              <CheckCircle2 className="h-4 w-4" />
             </span>
+          </div>
+
+          <div className="space-y-1">
+            <h1 className="text-2xl font-black tracking-tight text-white flex items-center justify-center gap-1.5">
+              <span>{STORE.name}</span>
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-sky-500 text-[10px] font-black text-white">
+                ✓
+              </span>
+            </h1>
+            <p className="text-xs font-semibold text-sky-400">@{STORE.handle}</p>
+            <p className="text-xs text-slate-300 max-w-xs mx-auto pt-1 leading-relaxed">
+              Bem-vindos ao meu cantinho oficial ✨ Fotos e conteúdos exclusivos todos os dias para vocês.
+            </p>
           </div>
         </header>
 
-        {/* Steps Cards */}
-        <section className="flex flex-col gap-2.5">
-          {/* Step 1 */}
-          <div className="flex items-center gap-3.5 rounded-2xl border border-sky-900/60 bg-[#0d223a]/90 backdrop-blur-sm p-3.5 shadow-sm transition hover:border-sky-700/80">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0284c7] text-sm font-black text-white shadow-md shadow-sky-900/50">
-              1
-            </span>
-            <p className="text-sm font-medium leading-snug text-slate-200">
-              Toque nos <span className="font-bold text-sky-400">3 pontos</span> ou no ícone de{" "}
-              <span className="font-bold text-sky-400">Seta</span> no canto superior direito.
-            </p>
-          </div>
-
-          {/* Step 2 */}
-          <div className="flex items-center gap-3.5 rounded-2xl border border-sky-900/60 bg-[#0d223a]/90 backdrop-blur-sm p-3.5 shadow-sm transition hover:border-sky-700/80">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0284c7] text-sm font-black text-white shadow-md shadow-sky-900/50">
-              2
-            </span>
-            <p className="text-sm font-medium leading-snug text-slate-200">
-              Procure e clique na opção escrita:{" "}
-              <span className="font-bold text-sky-400">"Abrir no Navegador"</span>.
-            </p>
-          </div>
-
-          {/* Step 3 */}
-          <div className="flex items-center gap-3.5 rounded-2xl border border-sky-900/60 bg-[#0d223a]/90 backdrop-blur-sm p-3.5 shadow-sm transition hover:border-sky-700/80">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0284c7] text-sm font-black text-white shadow-md shadow-sky-900/50">
-              3
-            </span>
-            <p className="text-sm font-medium leading-snug text-slate-200">
-              Após abrir fora do TikTok, clique no{" "}
-              <span className="font-bold text-white underline decoration-sky-400 decoration-2">
-                Botão Branco
-              </span>{" "}
-              abaixo.
-            </p>
-          </div>
-        </section>
-
-        {/* Video demonstration container */}
-        <section className="rounded-3xl border border-sky-900/60 bg-[#0b1c30]/80 p-3 shadow-lg shadow-sky-950/60 backdrop-blur-sm">
-          <div className="overflow-hidden rounded-2xl bg-black/40 border border-sky-950">
-            <picture>
-              <source srcSet="/tutorial.webp" type="image/webp" />
-              <img
-                src="/tutorial.gif"
-                alt="Tutorial animado passo a passo para abrir no navegador"
-                className="mx-auto aspect-square w-full max-w-[320px] object-cover"
-                loading="eager"
-              />
-            </picture>
-          </div>
-        </section>
-
-        {/* Action Button */}
-        <section className="space-y-3 pt-1">
+        {/* Links Section (Linktree Style) */}
+        <section className="flex flex-col gap-3.5">
+          {/* Link 1: Conteúdo Free */}
           <Link
-            to="/pix"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white py-4 px-6 text-base font-black tracking-wide text-[#071322] shadow-[0_8px_25px_rgba(255,255,255,0.15)] transition active:scale-[0.98] hover:bg-slate-100"
+            to="/free"
+            className="group relative flex items-center justify-between rounded-2xl border border-sky-900/60 bg-[#0d223a]/90 backdrop-blur-md p-4 shadow-lg transition duration-200 hover:border-sky-500/70 hover:bg-[#122e4e] active:scale-[0.98]"
           >
-            <span>JÁ FIZ OS 3 PASSOS</span>
+            <div className="flex items-center gap-3.5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white shadow-md">
+                <Sparkles className="h-6 w-6 text-yellow-300" />
+              </div>
+              <div className="text-left">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-black text-white">Conteúdo Free</span>
+                  <span className="rounded-full bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-300">
+                    Liberado
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300">Acesse 25 fotos liberadas gratuitamente</p>
+              </div>
+            </div>
+
             <svg
-              className="h-5 w-5 text-[#071322]"
+              className="h-5 w-5 text-sky-400 transition transform group-hover:translate-x-1"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeWidth="2.5"
               aria-hidden
             >
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </Link>
 
-          <p className="text-center text-[11px] font-medium uppercase tracking-wider text-sky-400/70">
-            🔒 Sistema Seguro · 100% Reembolsável
-          </p>
+          {/* Link 2: VIP Completo (Featured CTA) */}
+          <Link
+            to="/pix"
+            className="group relative flex items-center justify-between rounded-2xl border-2 border-sky-400/80 bg-gradient-to-r from-[#0f2d50] to-[#123660] p-4 shadow-xl shadow-sky-950/60 transition duration-200 hover:border-sky-300 hover:brightness-110 active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-rose-500 to-pink-600 text-white shadow-md">
+                <Flame className="h-6 w-6 text-white fill-white" />
+              </div>
+              <div className="text-left">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-black text-white">Canal VIP Completo</span>
+                  <span className="rounded-full bg-rose-500/20 border border-rose-500/40 px-2 py-0.5 text-[9px] font-black uppercase text-rose-300">
+                    Acesso Total
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300">Todas as fotos e vídeos · R$ {STORE.price.toFixed(2).replace(".", ",")}</p>
+              </div>
+            </div>
+
+            <svg
+              className="h-5 w-5 text-rose-400 transition transform group-hover:translate-x-1"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              aria-hidden
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </Link>
+
+          {/* Link 3: Contato / WhatsApp */}
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center justify-between rounded-2xl border border-sky-900/60 bg-[#0d223a]/90 backdrop-blur-md p-4 shadow-lg transition duration-200 hover:border-emerald-500/70 hover:bg-[#122e4e] active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-600 text-white shadow-md">
+                <MessageCircle className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-left">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-black text-white">Falar Comigo</span>
+                </div>
+                <p className="text-xs text-slate-300">Dúvidas ou suporte no WhatsApp</p>
+              </div>
+            </div>
+
+            <svg
+              className="h-5 w-5 text-emerald-400 transition transform group-hover:translate-x-1"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              aria-hidden
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </a>
+        </section>
+
+        {/* Security badge */}
+        <section className="flex items-center justify-center gap-1.5 text-center text-xs text-slate-400 pt-2">
+          <ShieldCheck className="h-4 w-4 text-sky-400" />
+          <span>Perfil Oficial Verificado · Acesso Seguro</span>
         </section>
       </div>
+
+      {/* Subtle Footer */}
+      <footer className="mt-8 text-center text-[11px] text-slate-500">
+        © {new Date().getFullYear()} {STORE.name}. Todos os direitos reservados.
+      </footer>
     </main>
   );
 }
