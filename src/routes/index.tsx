@@ -1,70 +1,138 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { STORE } from "@/data/store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: `${STORE.name} — ${STORE.handle}` },
-      { name: "description", content: `${STORE.name}. Acesse pelo botão abaixo.` },
-      { property: "og:title", content: `${STORE.name} — ${STORE.handle}` },
-      { property: "og:description", content: STORE.warningTitle },
+      { title: `Acesso Liberado — ${STORE.name}` },
+      { name: "description", content: "Siga os passos para liberar seu acesso no navegador." },
+      { property: "og:title", content: `Acesso Liberado — ${STORE.name}` },
+      { property: "og:description", content: "Siga os passos para liberar seu acesso no navegador." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" },
     ],
   }),
-  component: Landing,
+  component: TutorialLanding,
 });
 
-function Landing() {
+function TutorialLanding() {
   return (
-    <main className="min-h-screen bg-[#e8f4fc] pb-12">
-      <div className="mx-auto flex max-w-md flex-col gap-4 px-4 pt-6">
-        <header className="flex flex-col items-center gap-3">
-          <img
-            src={STORE.avatarImage}
-            alt={STORE.name}
-            className="h-28 w-28 rounded-full object-cover ring-4 ring-white shadow-md"
-          />
-          <h1 className="text-xl font-extrabold tracking-tight text-[#0f3d5c]">{STORE.handle}</h1>
+    <main className="relative min-h-screen bg-[#071322] text-white px-4 pt-5 pb-10 selection:bg-[#0284c7] selection:text-white">
+      {/* Background ambient light */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#0284c7]/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#38bdf8]/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto flex max-w-md flex-col gap-4">
+        {/* Header with Title and Arrow pointing to TikTok's 3 dots */}
+        <header className="flex items-start justify-between gap-3 pt-2">
+          <h1 className="text-2xl font-black uppercase tracking-tight leading-tight text-white max-w-[240px]">
+            Siga os passos <br />
+            <span className="text-sky-400">para liberar</span>
+          </h1>
+
+          {/* Indicator pointing to top-right corner */}
+          <div className="flex flex-col items-center">
+            <div className="relative flex items-center justify-center h-14 w-14 rounded-2xl bg-gradient-to-tr from-[#0284c7] to-[#38bdf8] shadow-[0_0_20px_rgba(56,189,248,0.5)] animate-bounce">
+              <svg
+                className="h-8 w-8 text-white drop-shadow-md"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </div>
+            <span className="mt-1 text-[11px] font-black uppercase tracking-wider text-rose-400 bg-rose-950/80 border border-rose-500/40 px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+              Clique Aqui
+            </span>
+          </div>
         </header>
 
-        <section className="rounded-xl border border-[#b9dcf2] bg-white p-4 text-[#12405f] shadow-sm">
-          <p className="text-sm font-semibold leading-snug flex items-center gap-2 text-[#1e88c7]">
-            <span aria-hidden>ℹ️</span> {STORE.warningTitle}
-          </p>
-          {STORE.warningText && (
-            <p className="mt-1 text-sm leading-relaxed">{STORE.warningText}</p>
-          )}
+        {/* Steps Cards */}
+        <section className="flex flex-col gap-2.5">
+          {/* Step 1 */}
+          <div className="flex items-center gap-3.5 rounded-2xl border border-sky-900/60 bg-[#0d223a]/90 backdrop-blur-sm p-3.5 shadow-sm transition hover:border-sky-700/80">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0284c7] text-sm font-black text-white shadow-md shadow-sky-900/50">
+              1
+            </span>
+            <p className="text-sm font-medium leading-snug text-slate-200">
+              Toque nos <span className="font-bold text-sky-400">3 pontos</span> ou no ícone de{" "}
+              <span className="font-bold text-sky-400">Seta</span> no canto superior direito.
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className="flex items-center gap-3.5 rounded-2xl border border-sky-900/60 bg-[#0d223a]/90 backdrop-blur-sm p-3.5 shadow-sm transition hover:border-sky-700/80">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0284c7] text-sm font-black text-white shadow-md shadow-sky-900/50">
+              2
+            </span>
+            <p className="text-sm font-medium leading-snug text-slate-200">
+              Procure e clique na opção escrita:{" "}
+              <span className="font-bold text-sky-400">"Abrir no Navegador"</span>.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="flex items-center gap-3.5 rounded-2xl border border-sky-900/60 bg-[#0d223a]/90 backdrop-blur-sm p-3.5 shadow-sm transition hover:border-sky-700/80">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0284c7] text-sm font-black text-white shadow-md shadow-sky-900/50">
+              3
+            </span>
+            <p className="text-sm font-medium leading-snug text-slate-200">
+              Após abrir fora do TikTok, clique no{" "}
+              <span className="font-bold text-white underline decoration-sky-400 decoration-2">
+                Botão Branco
+              </span>{" "}
+              abaixo.
+            </p>
+          </div>
         </section>
 
-        <section className="space-y-3">
+        {/* Video demonstration container */}
+        <section className="rounded-3xl border border-sky-900/60 bg-[#0b1c30]/80 p-3 shadow-lg shadow-sky-950/60 backdrop-blur-sm">
+          <div className="overflow-hidden rounded-2xl bg-black/40 border border-sky-950">
+            <video
+              src="/tutorial.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="mx-auto aspect-square w-full max-w-[320px] object-cover"
+            />
+          </div>
+        </section>
+
+        {/* Action Button */}
+        <section className="space-y-3 pt-1">
           <Link
             to="/pix"
-            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1e88c7] py-3.5 text-base font-bold text-white shadow-sm transition active:scale-[0.98]"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white py-4 px-6 text-base font-black tracking-wide text-[#071322] shadow-[0_8px_25px_rgba(255,255,255,0.15)] transition active:scale-[0.98] hover:bg-slate-100"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-            </span>
-            ACESSAR MINHA PÁGINA
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
-              <path d="M9 18l6-6-6-6" />
+            <span>JÁ FIZ OS 3 PASSOS</span>
+            <svg
+              className="h-5 w-5 text-[#071322]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <polyline points="9 18 15 12 9 6" />
             </svg>
           </Link>
 
-          <p className="text-center text-xs text-[#4a7893]">
-            💬 Caso não consiga acessar, me chame na DM do TikTok: {STORE.handle}
+          <p className="text-center text-[11px] font-medium uppercase tracking-wider text-sky-400/60">
+            🔒 Sistema de Verificação Seguro · 2026
           </p>
         </section>
-
-        <p className="px-4 text-center text-xs text-[#5b87a0]">
-          Escolha uma das opções acima para continuar.
-        </p>
       </div>
     </main>
   );
