@@ -28,12 +28,12 @@ export const Route = createFileRoute("/free")({
   component: TelegramFreeChannel,
 });
 
-// Todas as 25 fotos com legendas, horários e reações simuladas no estilo Telegram
+// Todas as 25 fotos com legendas naturais e espontâneas
 const TELEGRAM_POSTS = [
   {
     id: 1,
     file: "14bpmxv.jpg",
-    caption: "Oie amores! Sejam bem-vindos ao meu canal free oficial 💖 Aqui vou soltar prévias exclusivas pra vocês conhecerem um pouco do meu conteúdo.",
+    caption: "Oie amores! Criei esse canal pra postar algumas fotinhas pra vocês 💕",
     time: "10:14",
     views: "5.8K",
     reactions: { fire: 412, heart: 689, eyes: 230 },
@@ -41,7 +41,7 @@ const TELEGRAM_POSTS = [
   {
     id: 2,
     file: "1ah04oa.jpg",
-    caption: "Começando o dia com essa prévia do ensaio novo... O que acharam desse look? 👀",
+    caption: "Gostaram desse look? 👀",
     time: "11:05",
     views: "6.2K",
     reactions: { fire: 590, heart: 742, eyes: 310 },
@@ -49,7 +49,7 @@ const TELEGRAM_POSTS = [
   {
     id: 3,
     file: "1dv81h0.jpg",
-    caption: "Se bater 500 foguinhos aqui embaixo, solto mais duas hoje ainda! 🔥👇",
+    caption: "Se bater bastante foguinho aqui embaixo solto mais uma hoje ainda 🔥👇",
     time: "11:42",
     views: "5.4K",
     reactions: { fire: 720, heart: 512, eyes: 198 },
@@ -57,7 +57,7 @@ const TELEGRAM_POSTS = [
   {
     id: 4,
     file: "1m8o3jl.jpg",
-    caption: "Vocês pediram e eu soltei! No VIP esse ensaio tá com mais de 40 fotos e 3 vídeos sem censura...",
+    caption: "Mais fotos desse dia tão lá no VIP... quem já viu amou!",
     time: "12:18",
     views: "6.7K",
     reactions: { fire: 814, heart: 923, eyes: 415 },
@@ -65,7 +65,7 @@ const TELEGRAM_POSTS = [
   {
     id: 5,
     file: "1mj2u99.jpg",
-    caption: "Detalhes de pertinho pra vocês... Quem quiser o vídeo completo é só clicar no botão azul lá embaixo! 🙈",
+    caption: "Tirei essa agorinha, gostaram? 🙈 O vídeo tá lá no botão azul",
     time: "13:00",
     views: "5.9K",
     reactions: { fire: 630, heart: 780, eyes: 245 },
@@ -73,7 +73,7 @@ const TELEGRAM_POSTS = [
   {
     id: 6,
     file: "1o5gc6r.jpg",
-    caption: "Bastidores quentes do que rolou essa semana 🔥",
+    caption: "Um pouquinho do que rolou essa semana com vocês 🥰",
     time: "13:35",
     views: "7.1K",
     reactions: { fire: 940, heart: 855, eyes: 510 },
@@ -81,7 +81,7 @@ const TELEGRAM_POSTS = [
   {
     id: 7,
     file: "1o8h0qj.jpg",
-    caption: "Boa tarde vidas! Prévia rápida antes de entrar no banho ✨",
+    caption: "Boa tarde vidas! Antes de entrar no banho ✨",
     time: "14:12",
     views: "6.4K",
     reactions: { fire: 670, heart: 910, eyes: 320 },
@@ -89,7 +89,7 @@ const TELEGRAM_POSTS = [
   {
     id: 8,
     file: "1tu92xy.jpg",
-    caption: "Essa foi uma das minhas favoritas do mês... A versão sem nada tá liberada no VIP 💕",
+    caption: "Uma das minhas fotos favoritas... Tem mais lá no canal VIP 💕",
     time: "14:50",
     views: "8.3K",
     reactions: { fire: 1120, heart: 1040, eyes: 640 },
@@ -97,7 +97,7 @@ const TELEGRAM_POSTS = [
   {
     id: 9,
     file: "1yaohqa.jpg",
-    caption: "Gostaram do ângulo? 👀",
+    caption: "O que acharam desse ângulo? 👀",
     time: "15:25",
     views: "5.6K",
     reactions: { fire: 510, heart: 640, eyes: 280 },
@@ -105,7 +105,7 @@ const TELEGRAM_POSTS = [
   {
     id: 10,
     file: "6vb6wh.jpg",
-    caption: "Mais uma degustação pra animar a tarde de vocês 😋",
+    caption: "Mais uma pra animar a tarde de vocês 😋",
     time: "16:02",
     views: "6.9K",
     reactions: { fire: 780, heart: 830, eyes: 390 },
@@ -113,7 +113,7 @@ const TELEGRAM_POSTS = [
   {
     id: 11,
     file: "84czez.jpg",
-    caption: "No VIP tem a sequência completa desse momento... Quem já viu amou!",
+    caption: "No VIP tem a continuação dessa... ficou muito boa!",
     time: "16:40",
     views: "7.5K",
     reactions: { fire: 890, heart: 940, eyes: 470 },
@@ -121,7 +121,7 @@ const TELEGRAM_POSTS = [
   {
     id: 12,
     file: "8ytfgy.jpg",
-    caption: "Tirada agora mesmo na frente do espelho... 💋",
+    caption: "No espelho antes de sair... 💋",
     time: "17:15",
     views: "6.1K",
     reactions: { fire: 720, heart: 860, eyes: 315 },
@@ -129,7 +129,7 @@ const TELEGRAM_POSTS = [
   {
     id: 13,
     file: "dxh6th.jpg",
-    caption: "Aquecendo pros conteúdos do fim de semana 🔥",
+    caption: "Aquecendo pro fim de semana 🔥",
     time: "17:50",
     views: "8.0K",
     reactions: { fire: 1050, heart: 980, eyes: 590 },
@@ -137,7 +137,7 @@ const TELEGRAM_POSTS = [
   {
     id: 14,
     file: "hnn2oo.jpg",
-    caption: "Quem aí prefere fotos de biquíni ou lingerie? Comentem reagindo! 👇",
+    caption: "Quem aí prefere fotos assim ou de biquíni? Reage aí! 👇",
     time: "18:22",
     views: "7.3K",
     reactions: { fire: 840, heart: 915, eyes: 420 },
@@ -145,7 +145,7 @@ const TELEGRAM_POSTS = [
   {
     id: 15,
     file: "ifp98s.jpg",
-    caption: "O que não mostro no TikTok fica tudo aqui e no VIP... 👀",
+    caption: "O que não mostro no TikTok eu posto aqui e no VIP... 👀",
     time: "18:55",
     views: "6.8K",
     reactions: { fire: 760, heart: 870, eyes: 380 },
@@ -153,7 +153,7 @@ const TELEGRAM_POSTS = [
   {
     id: 16,
     file: "izhlou.jpg",
-    caption: "Sem filtro e bem naturalzinha como vocês gostam ✨",
+    caption: "Bem naturalzinha do jeito que vocês gostam ✨",
     time: "19:30",
     views: "7.9K",
     reactions: { fire: 930, heart: 1100, eyes: 460 },
@@ -161,7 +161,7 @@ const TELEGRAM_POSTS = [
   {
     id: 17,
     file: "j5nnod.jpg",
-    caption: "Mais uma desse ensaio que bateu recorde de pedidos no VIP!",
+    caption: "Mais uma que bateu recorde de elogios de vocês!",
     time: "20:05",
     views: "8.5K",
     reactions: { fire: 1200, heart: 1050, eyes: 670 },
@@ -177,7 +177,7 @@ const TELEGRAM_POSTS = [
   {
     id: 19,
     file: "lsmiht.jpg",
-    caption: "Prévia noturna exclusiva pra quem tá online agora! 😈",
+    caption: "Frequência da noite pra quem tá online agora! 😈",
     time: "21:18",
     views: "9.1K",
     reactions: { fire: 1340, heart: 1180, eyes: 750 },
@@ -185,7 +185,7 @@ const TELEGRAM_POSTS = [
   {
     id: 20,
     file: "m8x7zl.jpg",
-    caption: "Tudo liberado no VIP com acesso vitalício por R$ 19,90... Aproveitem que o preço vai subir! ⏳",
+    caption: "Tudo liberado no VIP com acesso vitalício por R$ 19,90... Aproveitem! ⏳",
     time: "21:50",
     views: "10.4K",
     reactions: { fire: 1560, heart: 1320, eyes: 890 },
@@ -201,7 +201,7 @@ const TELEGRAM_POSTS = [
   {
     id: 22,
     file: "qjj5it.jpg",
-    caption: "Amei muito essas fotos... O vídeo dessa troca de roupa tá imperdível! 🔥",
+    caption: "Amei muito essa foto... o vídeo tá imperdível lá no VIP! 🔥",
     time: "22:40",
     views: "9.6K",
     reactions: { fire: 1410, heart: 1250, eyes: 810 },
@@ -209,7 +209,7 @@ const TELEGRAM_POSTS = [
   {
     id: 23,
     file: "s8652f.jpg",
-    caption: "Madrugada de prévias por aqui... Quem tá acordado? 👀",
+    caption: "Quem tá acordado a essa hora? 👀",
     time: "23:10",
     views: "7.8K",
     reactions: { fire: 920, heart: 870, eyes: 460 },
@@ -217,7 +217,7 @@ const TELEGRAM_POSTS = [
   {
     id: 24,
     file: "vrqgda.jpg",
-    caption: "Penúltima foto liberada de graça hoje... Não perde o canal VIP por nada! 💕",
+    caption: "Mais uma fotinha de hoje pra vocês... Não perde o canal VIP! 💕",
     time: "23:35",
     views: "8.9K",
     reactions: { fire: 1150, heart: 1020, eyes: 620 },
@@ -225,7 +225,7 @@ const TELEGRAM_POSTS = [
   {
     id: 25,
     file: "yja85k.jpg",
-    caption: "Fechando o feed free de hoje com chave de ouro! Todas as outras +500 fotos e vídeos sem censura tão te esperando no botão abaixo 👇✨",
+    caption: "Fechando por hoje! Tem muito mais esperando por vocês no botão aqui embaixo 👇✨",
     time: "23:58",
     views: "12.1K",
     reactions: { fire: 1890, heart: 1640, eyes: 1050 },
@@ -327,7 +327,7 @@ function TelegramFreeChannel() {
           <div className="flex-1 truncate">
             <span className="font-bold text-[#2481cc] mr-1.5 text-[11px]">Mensagem Fixada:</span>
             <span className="text-slate-300 text-[11px]">
-              Como desbloquear o VIP completo (+500 mídias) por R$ {STORE.price.toFixed(2).replace(".", ",")}
+              Como entrar no canal VIP por R$ {STORE.price.toFixed(2).replace(".", ",")}
             </span>
           </div>
           <span className="text-[10px] font-black text-[#2481cc] uppercase shrink-0">Ver</span>
@@ -347,11 +347,10 @@ function TelegramFreeChannel() {
         <div className="rounded-2xl rounded-tl-sm bg-[#182533] border border-[#202f3f] p-3.5 shadow-sm text-sm text-slate-200 space-y-2">
           <p className="font-bold text-sky-400 text-xs">📢 Mensagem do Canal</p>
           <p className="leading-relaxed text-xs text-slate-300">
-            Oie vidas! Sejam muito bem-vindos ao meu canal free oficial 💖
-            Aqui vou postar algumas fotos e prévias para vocês conhecerem meu conteúdo.
+            Oie vidas! Criei esse canal pra postar algumas fotinhas pra vocês 💕
           </p>
           <p className="leading-relaxed text-xs text-slate-300">
-            👉 Para ter acesso ao acervo completo sem censura, com todos os meus vídeos íntimos e fotos exclusivas, basta tocar no botão azul fixo logo abaixo para entrar no VIP!
+            👉 Quem quiser ver todas as outras fotos e vídeos completos, clica no botão azul aqui embaixo pra entrar no VIP!
           </p>
           <div className="flex items-center justify-end gap-1 pt-1 text-[10px] text-[#708499]">
             <span>10:00</span>
@@ -538,7 +537,7 @@ function TelegramFreeChannel() {
               to="/pix"
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#2481cc] hover:bg-[#2072b4] py-3.5 px-5 text-sm font-black uppercase tracking-wide text-white shadow-xl shadow-[#2481cc]/30 transition active:scale-[0.98]"
             >
-              <span>Ver Fotos Sem Censura no VIP</span>
+              <span>Ver Mais Fotos e Vídeos no VIP</span>
               <Lock className="h-4 w-4" />
             </Link>
             <p className="text-[11px] text-slate-400">
